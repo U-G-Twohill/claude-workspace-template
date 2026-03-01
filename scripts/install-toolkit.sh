@@ -58,6 +58,17 @@ Commands installed:
   site-audit.md         Website SEO, performance, and security audits
   deploy-draft.md       Deploy static sites to Netlify for client review
   autopilot.md          Run full toolkit pipeline unattended
+  create-tests.md       Auto-generate test suites from code analysis
+  audit-deps.md         Dependency security and freshness audit
+  prepare-deploy.md     Production readiness and CI/CD setup
+  proposal.md           Generate client proposals from briefs/RFPs
+  client-report.md      Automated client-facing reports
+  competitive-intel.md  Competitor analysis and intelligence
+  setup-hooks.md        Configure quality enforcement hooks
+  document.md           Auto-generate project documentation
+  connect.md            MCP server integration setup
+  onboard-client.md     Client onboarding package generation
+  meeting-actions.md    Meeting notes to action items
 
 Examples:
   bash scripts/install-toolkit.sh
@@ -112,6 +123,17 @@ COMMANDS=(
     "site-audit.md"
     "deploy-draft.md"
     "autopilot.md"
+    "create-tests.md"
+    "audit-deps.md"
+    "prepare-deploy.md"
+    "proposal.md"
+    "client-report.md"
+    "competitive-intel.md"
+    "setup-hooks.md"
+    "document.md"
+    "connect.md"
+    "onboard-client.md"
+    "meeting-actions.md"
 )
 
 # ── Diff detection ───────────────────────────────────────────────────────────

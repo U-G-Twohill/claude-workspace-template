@@ -45,7 +45,22 @@ Claude should always orient itself through `/prime` at session start, then act w
 │   │   ├── frontend-design.md     # /frontend-design — screenshot-driven UI development
 │   │   ├── site-audit.md          # /site-audit — website SEO, performance, security audits
 │   │   ├── deploy-draft.md        # /deploy-draft — deploy static sites to Netlify for review
-│   │   └── autopilot.md           # /autopilot — run full pipeline unattended
+│   │   ├── autopilot.md           # /autopilot — run full pipeline unattended
+│   │   ├── create-tests.md       # /create-tests — auto-generate test suites
+│   │   ├── audit-deps.md         # /audit-deps — dependency security and freshness
+│   │   ├── prepare-deploy.md     # /prepare-deploy — production readiness and CI/CD
+│   │   ├── proposal.md           # /proposal — generate client proposals
+│   │   ├── client-report.md      # /client-report — automated client deliverables
+│   │   ├── competitive-intel.md  # /competitive-intel — competitor analysis
+│   │   ├── setup-hooks.md       # /setup-hooks — configure quality enforcement hooks
+│   │   ├── document.md          # /document — auto-generate project documentation
+│   │   ├── connect.md           # /connect — MCP server integration setup
+│   │   ├── onboard-client.md    # /onboard-client — client onboarding packages
+│   │   └── meeting-actions.md   # /meeting-actions — meeting notes to action items
+│   ├── agents/                # Custom subagents with persistent memory
+│   │   ├── code-reviewer.md       # Code review specialist (project memory)
+│   │   ├── security-auditor.md    # Security analysis specialist (user memory)
+│   │   └── client-communicator.md # Client message drafting (project memory)
 │   ├── settings.local.json    # Project-level permissions
 │   └── skills/                # Skills (project-layer — installed per project)
 │       ├── mcp-integration/       # MCP server integration guidance
@@ -262,6 +277,187 @@ prime → discover → scope (opinionated) → create-plan → implement → har
 - `/autopilot --frontend ./reference/homepage.png` — include frontend design
 - `/autopilot --skip-to harden` — resume from harden phase
 - `/autopilot status` — check current run state
+
+### /create-tests [target]
+
+**Purpose:** Auto-generate meaningful test suites from code analysis — unit tests, integration tests, and edge cases.
+
+Analyzes the project's code, detects the test framework, and generates tests that catch real bugs. Integrates with `/harden` by converting harden findings into regression tests.
+
+**Options:** a specific file or directory, or omit for project-wide test generation
+
+**Features:**
+- Auto-detects test framework (Vitest, Jest, pytest, Go testing, etc.)
+- Generates unit, integration, edge case, and regression tests
+- Converts harden report findings into regression test cases
+- Runs tests to verify they pass before delivering
+- Follows existing test patterns and conventions in the project
+
+**Examples:**
+- `/create-tests` — generate tests for key modules
+- `/create-tests src/auth/` — generate tests for auth module
+- `/create-tests utils.ts` — generate tests for a specific file
+
+### /audit-deps [focus]
+
+**Purpose:** Scan project dependencies for security vulnerabilities, outdated packages, and upgrade opportunities.
+
+Extends `/harden` by focusing specifically on the supply chain. Runs native audit tools, classifies vulnerabilities by severity, and produces a prioritized upgrade plan.
+
+**Focus options:** `full` (default), `security`, `outdated`, `upgrade`, or a specific package name
+
+**Features:**
+- Uses native audit tools (npm audit, pip audit, cargo audit, etc.)
+- Classifies vulnerabilities by severity with CVE references
+- Identifies abandoned/unmaintained packages
+- Produces a phased upgrade plan (urgent security → major upgrades → routine updates)
+- Bridges to `/create-plan` for fix implementation
+
+**Examples:**
+- `/audit-deps` — full audit
+- `/audit-deps security` — security vulnerabilities only
+- `/audit-deps upgrade` — upgrade impact analysis
+- `/audit-deps lodash` — audit a specific package
+
+### /prepare-deploy [focus]
+
+**Purpose:** Validate production readiness and generate deployment configuration — CI/CD, Docker, environment config, and pre-launch checklist.
+
+Analyzes the project, generates deployment infrastructure (CI pipeline, Dockerfile, environment config), and produces a readiness checklist. Does not deploy — makes deployment safe and possible.
+
+**Focus options:** `full` (default), `ci`, `docker`, `checklist`, `env`, or a platform name (`vercel`, `railway`, `fly`)
+
+**Features:**
+- Audits environment variables and creates `.env.example`
+- Generates CI/CD pipelines (GitHub Actions, GitLab CI)
+- Creates multi-stage Dockerfiles with security best practices
+- Platform-specific config (Vercel, Netlify, Railway, Fly.io, Render)
+- Comprehensive pre-launch checklist with readiness scoring
+- Flags unresolved harden findings as deployment blockers
+
+**Examples:**
+- `/prepare-deploy` — full production readiness check
+- `/prepare-deploy ci` — CI/CD pipeline only
+- `/prepare-deploy docker` — Dockerfile and docker-compose only
+- `/prepare-deploy vercel` — Vercel-specific deployment config
+- `/prepare-deploy checklist` — readiness checklist only
+
+### /proposal [input]
+
+**Purpose:** Generate client proposals from a brief, RFP, or conversation.
+
+Pulls from your context files, case studies, and pricing references to produce a near-complete proposal. Supports project, retainer, audit, and phased engagement types.
+
+**Input:** path to an RFP/brief document, a client name, a description, or omit for conversational intake
+
+**Examples:**
+- `/proposal` — interactive proposal creation
+- `/proposal ./reference/rfp-acme-corp.pdf` — generate from an RFP document
+- `/proposal "Acme Corp needs a website redesign, budget ~$30k, 3-month timeline"`
+
+### /client-report [type]
+
+**Purpose:** Generate professional client-facing reports from project data — progress updates, audit summaries, monthly reports, and handoff documentation.
+
+Transforms technical outputs (harden reports, site audits, implementation summaries) into client-friendly language. Automatically detects report type from available data.
+
+**Types:** `progress`, `audit`, `monthly`, `handoff`, or omit for auto-detection
+
+**Examples:**
+- `/client-report` — auto-detect and generate from available data
+- `/client-report progress` — project progress update
+- `/client-report audit` — audit findings in client language
+- `/client-report monthly` — monthly maintenance report
+- `/client-report handoff` — project handoff documentation
+
+### /competitive-intel [target]
+
+**Purpose:** Research competitors and produce an actionable intelligence report — positioning, features, pricing, tech stack, and opportunities.
+
+Gathers publicly available information, compares against your positioning, and identifies opportunities and threats. Supports single-competitor deep dives and multi-competitor landscape analysis.
+
+**Target:** competitor URL, company name, or `landscape` for multi-competitor overview
+
+**Examples:**
+- `/competitive-intel https://competitor.com` — deep analysis of one competitor
+- `/competitive-intel "Acme Agency"` — research by company name
+- `/competitive-intel landscape` — comparative analysis of multiple competitors
+
+### /setup-hooks [preset]
+
+**Purpose:** Configure Claude Code hooks for continuous quality enforcement — auto-formatting, safety guards, and quality gates.
+
+Detects project tooling (formatters, linters, test runners) and configures hooks that run automatically during Claude Code sessions.
+
+**Presets:** `quality` (format + lint + test gates), `safety` (block dangerous operations), `format` (auto-format only), `full` (all), `status` (show current hooks)
+
+**Examples:**
+- `/setup-hooks` — interactive preset selection
+- `/setup-hooks full` — configure all hooks
+- `/setup-hooks safety` — safety guards only
+- `/setup-hooks status` — show current hook configuration
+
+### /document [focus]
+
+**Purpose:** Auto-generate and maintain project documentation — API docs, architecture decisions, deployment guides, and troubleshooting runbooks.
+
+Analyzes the codebase and generates accurate documentation. Enhances existing docs rather than duplicating.
+
+**Focus options:** `full` (default), `api`, `architecture`, `deploy`, `runbook`, `readme`, or a specific file/module
+
+**Examples:**
+- `/document` — generate all applicable documentation
+- `/document api` — API endpoint documentation
+- `/document architecture` — architecture and design decisions
+- `/document readme` — create or enhance README.md
+
+### /connect [service]
+
+**Purpose:** Set up MCP server integrations to connect Claude Code with external services — databases, APIs, design tools, and communication platforms.
+
+Walks through MCP server setup for popular services. Handles credentials, scope selection, and verification.
+
+**Services:** `slack`, `figma`, `github`, `postgres`, `notion`, `stripe`, `sentry`, `list` (show all), or omit for interactive selection
+
+**Examples:**
+- `/connect list` — show all available integrations
+- `/connect postgres` — set up PostgreSQL database access
+- `/connect figma` — connect to Figma design files
+- `/connect slack` — set up Slack messaging
+
+### /onboard-client [input]
+
+**Purpose:** Generate a complete client onboarding package — welcome email, project timeline, kickoff agenda, and access request forms.
+
+Pulls from proposals and context files to create a ready-to-send onboarding package for new client engagements.
+
+**Input:** client name, project description, or path to a signed proposal/contract
+
+**Examples:**
+- `/onboard-client "Acme Corp"` — generate onboarding package
+- `/onboard-client ./outputs/proposal-acme-2026-03-01.md` — generate from signed proposal
+
+### /meeting-actions [input]
+
+**Purpose:** Extract action items, decisions, and follow-ups from meeting notes — create tasks, draft emails, and update project docs.
+
+Parses meeting notes or transcripts and produces a structured output with decisions, action items (with owners), open questions, and draft follow-up emails.
+
+**Input:** path to a meeting notes file, or paste notes inline
+
+**Examples:**
+- `/meeting-actions ./notes/kickoff-call.md` — process meeting notes from file
+- `/meeting-actions "Client wants to launch by April. John to handle DNS. Need brand assets by next week."` — process inline notes
+
+### Custom Subagents
+
+Three persistent subagents are available in every project. They learn from each use and improve over time.
+
+- **code-reviewer** — Reviews code changes for bugs, security, and quality. Has project-level memory.
+- **security-auditor** — Specialized security analysis with vulnerability detection. Has user-level memory (shared across projects).
+- **client-communicator** — Drafts client-facing messages and emails in your tone. Has project-level memory.
+
+Claude will use these automatically when relevant, or you can invoke them directly: "Have the code reviewer check my changes."
 
 ### Install Scripts
 
