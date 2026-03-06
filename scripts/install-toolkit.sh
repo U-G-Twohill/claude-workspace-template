@@ -70,6 +70,7 @@ Commands installed:
   onboard-client.md     Client onboarding package generation
   meeting-actions.md    Meeting notes to action items
   sync-docs.md          Audit and update all documentation
+  bootstrap.md          Build prototype from business document unattended
 
 Examples:
   bash scripts/install-toolkit.sh
@@ -136,6 +137,7 @@ COMMANDS=(
     "onboard-client.md"
     "meeting-actions.md"
     "sync-docs.md"
+    "bootstrap.md"
 )
 
 # ── Diff detection ───────────────────────────────────────────────────────────

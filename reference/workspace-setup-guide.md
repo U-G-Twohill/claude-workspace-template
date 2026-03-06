@@ -11,7 +11,7 @@ How to set up the Glen's Toolkit for your projects.
 The Glen's Toolkit is a two-layer system:
 
 **Toolkit Layer** (universal — installed once, available everywhere):
-23 commands including `/prime`, `/discover`, `/scope`, `/create-plan`, `/implement`, `/harden`, `/sync-toolkit`, `/sync-docs`, `/autopilot`, `/frontend-design`, `/site-audit`, `/deploy-draft`, `/create-tests`, `/audit-deps`, `/prepare-deploy`, `/proposal`, `/client-report`, `/competitive-intel`, `/setup-hooks`, `/document`, `/connect`, `/onboard-client`, and `/meeting-actions`. See the README for full details on each command.
+24 commands including `/prime`, `/discover`, `/scope`, `/create-plan`, `/implement`, `/harden`, `/sync-toolkit`, `/sync-docs`, `/autopilot`, `/bootstrap`, `/frontend-design`, `/site-audit`, `/deploy-draft`, `/create-tests`, `/audit-deps`, `/prepare-deploy`, `/proposal`, `/client-report`, `/competitive-intel`, `/setup-hooks`, `/document`, `/connect`, `/onboard-client`, and `/meeting-actions`. See the README for full details on each command.
 
 **Project Layer** (per-project — scaffolded for each repo):
 - **Context files** — Templates for personal info, business info, strategy, and current data.

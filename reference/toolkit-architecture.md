@@ -20,7 +20,7 @@ Every command uses relative paths (`./context/`, `./CLAUDE.md`, `./plans/`) so i
 **Installed by:** `scripts/install-toolkit.sh`
 **Scope:** Available in every project, every session
 
-These are the 23 commands that work identically across all projects:
+These are the 24 commands that work identically across all projects:
 
 | File | Purpose |
 |------|---------|
@@ -47,6 +47,7 @@ These are the 23 commands that work identically across all projects:
 | `connect.md` | MCP server integration setup |
 | `onboard-client.md` | Client onboarding package generation |
 | `meeting-actions.md` | Meeting notes to action items |
+| `bootstrap.md` | Build prototype from business document unattended |
 
 **Update story:** Edit commands in the template repo, run `install-toolkit.sh` — all projects get the update immediately.
 
@@ -158,6 +159,7 @@ Each command can be used independently or as part of the pipeline. The `/harden`
 | `/connect [service]` | MCP integration setup | Service name or `list` | Configured integration |
 | `/onboard-client [input]` | Client onboarding | Client name or proposal path | Onboarding package |
 | `/meeting-actions [input]` | Process meeting notes | Notes file or inline text | Action items + follow-ups |
+| `/bootstrap <doc>` | Prototype from business doc | Document path + optional flags | Full working prototype |
 
 ---
 
@@ -248,3 +250,4 @@ See `command-development-guide.md` for the full process. Summary:
 | 2026-02-28 | Added `/harden` command — 7 commands total. Self-improving knowledge base pattern. |
 | 2026-03-01 | Added 16 new commands (site-audit, autopilot, frontend-design, deploy-draft, create-tests, audit-deps, prepare-deploy, proposal, client-report, competitive-intel, setup-hooks, document, connect, onboard-client, meeting-actions) and 3 custom subagents — 22 commands total. |
 | 2026-03-06 | Added `/sync-docs` command — 23 commands total. Added `crr` alias for resume-in-run-mode. |
+| 2026-03-06 | Added `/bootstrap` command — 24 commands total. Build prototypes from business documents unattended. |

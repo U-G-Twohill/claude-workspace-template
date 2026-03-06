@@ -57,7 +57,8 @@ Claude should always orient itself through `/prime` at session start, then act w
 │   │   ├── connect.md           # /connect — MCP server integration setup
 │   │   ├── onboard-client.md    # /onboard-client — client onboarding packages
 │   │   ├── meeting-actions.md   # /meeting-actions — meeting notes to action items
-│   │   └── sync-docs.md        # /sync-docs — audit and update all documentation
+│   │   ├── sync-docs.md        # /sync-docs — audit and update all documentation
+│   │   └── bootstrap.md       # /bootstrap — build prototype from business document
 │   ├── agents/                # Custom subagents with persistent memory
 │   │   ├── code-reviewer.md       # Code review specialist (project memory)
 │   │   ├── security-auditor.md    # Security analysis specialist (user memory)
@@ -449,6 +450,20 @@ Parses meeting notes or transcripts and produces a structured output with decisi
 **Examples:**
 - `/meeting-actions ./notes/kickoff-call.md` — process meeting notes from file
 - `/meeting-actions "Client wants to launch by April. John to handle DNS. Need brand assets by next week."` — process inline notes
+
+### /bootstrap <document-path> [options]
+
+**Purpose:** Build a full prototype from a business document unattended — scaffold, extract context, and execute multiple build passes to maximize working functionality.
+
+Reads a business document (plan, spec, PRD), extracts all features and context, scaffolds the project, organizes features into build passes, and executes multiple plan→implement cycles. Includes frontend design by default. Designed for "start it and walk away" prototyping.
+
+**Options:** `--no-frontend` (skip UI polish), `--frontend-ref <image>` (match a design mockup), `--skip-to <phase>`, `status`
+
+**Examples:**
+- `/bootstrap ./docs/business-plan.pdf` — build prototype from business plan
+- `/bootstrap ./docs/spec.md --no-frontend` — backend/API only
+- `/bootstrap ./docs/plan.pdf --frontend-ref ./mockup.png` — match a design
+- `/bootstrap status` — check current run state
 
 ### /sync-docs [action]
 

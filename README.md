@@ -4,7 +4,7 @@ A command system for [Claude Code](https://docs.anthropic.com/en/docs/claude-cod
 
 **Two layers:**
 
-- **Toolkit layer**: 23 universal slash commands installed to `~/.claude/commands/`, available in every project
+- **Toolkit layer**: 24 universal slash commands installed to `~/.claude/commands/`, available in every project
 - **Project layer**: Per-project scaffolding (context templates, skills, directory structure) installed per repo
 
 Commands provide the logic; each project provides the data.
@@ -57,7 +57,7 @@ Pick any location — the scripts will reference it by absolute path.
 
 ### Step 2: Install the Toolkit (one-time)
 
-This copies all 23 slash commands to `~/.claude/commands/` so they're available in every project:
+This copies all 24 slash commands to `~/.claude/commands/` so they're available in every project:
 
 ```bash
 bash ~/GlensToolkit/scripts/install-toolkit.sh
@@ -331,6 +331,28 @@ Runs the full pipeline unattended — discover, scope, plan, implement, and hard
 - Prototyping where speed matters more than precision
 
 **Best practice:** Use `cr` (run mode) with `/autopilot` — it needs to execute without permission prompts. Review the artifacts in `outputs/autopilot/` afterward. The harden loop is capped at 3 passes to prevent runaway.
+
+---
+
+#### `/bootstrap <document-path> [options]`
+
+Builds a full prototype from a business document unattended. Scaffolds the project, extracts context from your document (features, tech stack, users, business model), organizes features into build passes, and executes multiple plan-implement cycles to maximize working functionality. Includes frontend design by default.
+
+**Options:** `--no-frontend` (skip UI polish), `--frontend-ref <image>` (match a design mockup), `--skip-to <phase>`, `status`
+
+```
+/bootstrap ./docs/business-plan.pdf
+/bootstrap ./docs/spec.md --no-frontend
+/bootstrap ./docs/plan.pdf --frontend-ref ./mockup.png
+/bootstrap status
+```
+
+**When to use:**
+- You have a business document (plan, spec, PRD) and want a working prototype
+- You want to start a build and walk away
+- Rapid prototyping from detailed requirements
+
+**Best practice:** Use `cr` (run mode) — this command runs fully unattended. Put your business document in the project repo first. When you return, check `outputs/bootstrap/summary.md` for how to test and what was built.
 
 ---
 
@@ -725,7 +747,7 @@ After scaffolding, a project looks like this:
 .
 ├── CLAUDE.md                  # Core context — loaded by Claude every session
 ├── .claude/
-│   ├── commands/              # 23 slash commands (toolkit layer, at ~/.claude/commands/)
+│   ├── commands/              # 24 slash commands (toolkit layer, at ~/.claude/commands/)
 │   ├── agents/                # 3 custom subagents with persistent memory
 │   ├── skills/                # Domain knowledge (project layer)
 │   └── settings.local.json    # Project-level permissions

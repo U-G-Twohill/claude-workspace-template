@@ -23,7 +23,7 @@ bash /path/to/GlensToolkit/scripts/install-toolkit.sh
 
 It will show you what's being installed and offer to add a `claude-toolkit` alias for easy re-runs.
 
-**What this installs (23 commands):**
+**What this installs (24 commands):**
 
 | Command | What It Does |
 |---------|-------------|
@@ -50,6 +50,7 @@ It will show you what's being installed and offer to add a `claude-toolkit` alia
 | `/connect` | MCP server integration setup |
 | `/onboard-client` | Client onboarding package generation |
 | `/meeting-actions` | Meeting notes to action items |
+| `/bootstrap` | Build prototype from business document unattended |
 
 ### 2. Set Up Shell Aliases (Optional but Recommended)
 
@@ -348,6 +349,7 @@ For ongoing development:
 | Process meeting notes | `/meeting-actions ./notes.md` |
 | Onboard a new client | `/onboard-client "Client Name"` |
 | Sync improved commands back to toolkit | `/sync-toolkit push` |
+| Build a prototype from a business doc | `/bootstrap ./docs/plan.pdf` |
 | Update all documentation | `/sync-docs push` |
 
 ---
