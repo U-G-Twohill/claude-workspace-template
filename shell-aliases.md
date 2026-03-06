@@ -91,17 +91,20 @@ claude-toolkit --help       # Show usage info
 alias claude-init='bash "/path/to/GlensToolkit/scripts/install.sh"'
 ```
 
-Scaffolds a project with context templates, skills, CLAUDE.md, and directory structure. Does not install commands — those come from the toolkit layer via `claude-toolkit`.
+Scaffolds a project in two phases. Does not install commands — those come from the toolkit layer via `claude-toolkit`.
+
+**Phase 1:** Copies CLAUDE.md, context templates, skills, and directory structure.
+**Phase 2:** Interactive milestone setup — asks project type (web/software/experiment/skip), then conditionally asks about database, auth, and client-facing needs. Copies the appropriate milestone templates from `milestone-templates/` into `plans/`. The Project Hub auto-imports these into kanban on first scan.
 
 ```bash
-claude-init                     # Scaffold current directory
+claude-init                     # Scaffold current directory (both phases)
 claude-init ~/my-project        # Scaffold a specific directory
-claude-init --force /tmp/test   # Skip all prompts
+claude-init --force /tmp/test   # Phase 1 only (skips Phase 2 and all prompts)
 claude-init --help              # Show usage info
 ```
 
 **Options (both scripts):**
-- `--force` — Skip all confirmation prompts (useful for scripting)
+- `--force` — Skip all confirmation prompts and Phase 2 (useful for scripting)
 - `--no-alias` — Skip the alias setup offer at the end
 - `--help` — Show usage information
 

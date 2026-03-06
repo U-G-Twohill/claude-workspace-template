@@ -255,11 +255,100 @@ done
 # ── Success summary ──────────────────────────────────────────────────────────
 
 printf "\n"
-printf "${GREEN}${BOLD}Project scaffolding complete!${RESET}\n"
+printf "${GREEN}${BOLD}Phase 1 complete — project scaffolding installed.${RESET}\n"
 printf "  Files copied:       %d\n" "$COPIED"
 printf "  Directories created: 4\n"
 printf "  Target: %s\n" "$TARGET_DIR"
 printf "\n"
+
+# ── Phase 2: Milestone Setup ───────────────────────────────────────────────
+
+TEMPLATES_COPIED=0
+
+if [ "$FORCE" = true ]; then
+    # In --force mode, skip Phase 2 (no interactive input available)
+    info "Skipping milestone setup (--force mode)."
+else
+    printf "${BOLD}Phase 2: Milestone Setup${RESET}\n"
+    printf "\n"
+    printf "  Project type?\n"
+    printf "    1) Web app / client site\n"
+    printf "    2) Plugin / software / tool\n"
+    printf "    3) Experiment / personal\n"
+    printf "    4) Skip milestone setup\n"
+    printf "\n"
+    read -p "  Choice [1-4]: " PROJECT_TYPE
+
+    if [ "$PROJECT_TYPE" = "4" ] || [ -z "$PROJECT_TYPE" ]; then
+        info "Skipping milestone setup."
+    else
+        HAS_DB="n"
+        HAS_AUTH="n"
+        IS_CLIENT="n"
+
+        if [ "$PROJECT_TYPE" = "1" ]; then
+            read -p "  Does this project use a database? [y/n]: " HAS_DB
+            read -p "  Does this project require authentication? [y/n]: " HAS_AUTH
+            read -p "  Is this a client-facing project? [y/n]: " IS_CLIENT
+        fi
+
+        printf "\n"
+        info "Copying milestone templates..."
+
+        # Always copy universal templates
+        for f in "$SOURCE_DIR/milestone-templates/universal/"*.md; do
+            if [ -f "$f" ]; then
+                cp "$f" "$TARGET_DIR/plans/"
+                ok "  plans/$(basename "$f")"
+                TEMPLATES_COPIED=$((TEMPLATES_COPIED + 1))
+            fi
+        done
+
+        # Type-specific templates
+        if [ "$PROJECT_TYPE" = "1" ]; then
+            # Web project — always include frontend polish
+            cp "$SOURCE_DIR/milestone-templates/web-project/08-frontend-polish.md" "$TARGET_DIR/plans/"
+            ok "  plans/08-frontend-polish.md"
+            TEMPLATES_COPIED=$((TEMPLATES_COPIED + 1))
+
+            if [ "$HAS_DB" = "y" ] || [ "$HAS_DB" = "Y" ]; then
+                cp "$SOURCE_DIR/milestone-templates/web-project/06-database.md" "$TARGET_DIR/plans/"
+                ok "  plans/06-database.md"
+                TEMPLATES_COPIED=$((TEMPLATES_COPIED + 1))
+            fi
+
+            if [ "$HAS_AUTH" = "y" ] || [ "$HAS_AUTH" = "Y" ]; then
+                cp "$SOURCE_DIR/milestone-templates/web-project/07-auth.md" "$TARGET_DIR/plans/"
+                ok "  plans/07-auth.md"
+                TEMPLATES_COPIED=$((TEMPLATES_COPIED + 1))
+            fi
+
+            if [ "$IS_CLIENT" = "y" ] || [ "$IS_CLIENT" = "Y" ]; then
+                cp "$SOURCE_DIR/milestone-templates/web-project/09-client-handoff.md" "$TARGET_DIR/plans/"
+                ok "  plans/09-client-handoff.md"
+                TEMPLATES_COPIED=$((TEMPLATES_COPIED + 1))
+            fi
+        elif [ "$PROJECT_TYPE" = "2" ]; then
+            # Software — copy all software templates
+            for f in "$SOURCE_DIR/milestone-templates/software/"*.md; do
+                if [ -f "$f" ]; then
+                    cp "$f" "$TARGET_DIR/plans/"
+                    ok "  plans/$(basename "$f")"
+                    TEMPLATES_COPIED=$((TEMPLATES_COPIED + 1))
+                fi
+            done
+        fi
+        # Type 3 (experiment/personal) — universal templates only, already copied
+
+        printf "\n"
+        printf "${GREEN}${BOLD}Phase 2 complete — %d milestone templates copied.${RESET}\n" "$TEMPLATES_COPIED"
+        printf "  Review and customise them in %s/plans/ before running /prime.\n" "$TARGET_DIR"
+        printf "  The Project Hub will import them automatically on next scan.\n"
+        printf "\n"
+    fi
+fi
+
+# ── Final summary ──────────────────────────────────────────────────────────
 
 # Check if toolkit is installed
 if [ ! -f "$HOME/.claude/commands/prime.md" ]; then
@@ -273,7 +362,12 @@ fi
 printf "  Next steps:\n"
 printf "    1. cd %s\n" "$TARGET_DIR"
 printf "    2. Edit context/ files with your info\n"
-printf "    3. Run: claude \"/prime\"\n"
+if [ "$TEMPLATES_COPIED" -gt 0 ]; then
+    printf "    3. Review milestone templates in plans/\n"
+    printf "    4. Run: claude \"/prime\"\n"
+else
+    printf "    3. Run: claude \"/prime\"\n"
+fi
 printf "\n"
 
 # ── Offer alias setup ───────────────────────────────────────────────────────

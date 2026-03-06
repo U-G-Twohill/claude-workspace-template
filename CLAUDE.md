@@ -80,9 +80,14 @@ Claude should always orient itself through `/prime` at session start, then act w
 │   ├── toolkit-architecture.md      # Two-layer architecture docs
 │   ├── command-development-guide.md # How to author new commands
 │   └── workspace-setup-guide.md     # Installation details and aliases
+├── milestone-templates/        # Milestone template library for new projects
+│   ├── universal/                 # Applied to every project (01–05)
+│   ├── web-project/               # Web app / client site milestones (06–09)
+│   ├── software/                  # Plugin / tool / software milestones (06–08)
+│   └── _template.md               # Blank template for authoring new milestones
 ├── scripts/
 │   ├── install-toolkit.sh     # Install commands to ~/.claude/ (one-time)
-│   └── install.sh             # Scaffold a project (per-project)
+│   └── install.sh             # Scaffold a project (per-project, two-phase)
 └── shell-aliases.md           # Shell alias documentation
 ```
 
@@ -94,6 +99,7 @@ Claude should always orient itself through `/prime` at session start, then act w
 | `plans/`     | Detailed implementation plans. Created by `/create-plan`, executed by `/implement`. |
 | `outputs/`   | Deliverables, analyses, reports, and work products.                                 |
 | `reference/` | Guides: getting-started, architecture, command development, setup.                  |
+| `milestone-templates/` | Reusable milestone roadmaps applied by `install.sh` Phase 2.               |
 | `scripts/`   | Install scripts for toolkit and project scaffolding.                                |
 
 ---
@@ -499,14 +505,16 @@ bash scripts/install-toolkit.sh --force  # Skip prompts
 
 Installs all commands to `~/.claude/commands/` — available in every project. Run once, then again whenever commands are updated.
 
-#### `scripts/install.sh` — Scaffold a Project
+#### `scripts/install.sh` — Scaffold a Project (Two-Phase)
 
 ```bash
-bash scripts/install.sh ~/my-project            # Interactive
-bash scripts/install.sh --force ~/my-project     # Skip prompts
+bash scripts/install.sh ~/my-project            # Interactive (both phases)
+bash scripts/install.sh --force ~/my-project     # Phase 1 only (skip prompts)
 ```
 
-Scaffolds a project with context templates, skills, CLAUDE.md, and directory structure. Does NOT install commands — those come from the toolkit layer.
+**Phase 1:** Scaffolds a project with context templates, skills, CLAUDE.md, and directory structure. Does NOT install commands — those come from the toolkit layer.
+
+**Phase 2:** Interactive milestone setup. Asks 1–4 questions (project type, database, auth, client-facing) and copies the appropriate milestone templates from `milestone-templates/` into the project's `plans/` directory. Templates use `## Heading` + `- [ ]` format so the Project Hub auto-imports them into kanban on first scan. Choice 4 skips Phase 2 cleanly.
 
 **Options for both:** `--force` (skip prompts), `--no-alias` (skip alias offer), `--help` (usage info)
 
