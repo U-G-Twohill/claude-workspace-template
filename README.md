@@ -105,8 +105,13 @@ Before using the toolkit in a project, you need to scaffold it — this adds the
 ```bash
 claude-init ~/my-project
 # or: claude-init .              (scaffold current directory)
-# or: claude-init --force ~/my-project  (skip prompts)
+# or: claude-init --force ~/my-project  (Phase 1 only, skip prompts)
 ```
+
+The install runs in two phases:
+
+- **Phase 1:** Copies project files (CLAUDE.md, context templates, skills, directory structure)
+- **Phase 2:** Interactive milestone setup — asks your project type and needs, then copies the right milestone templates into `plans/`. These auto-import into the Project Hub's kanban on first scan. Choose "Skip" if templates don't apply.
 
 **What this creates:**
 
@@ -124,7 +129,7 @@ my-project/
 │   ├── business-info.md         # Your org/business overview
 │   ├── strategy.md              # Current priorities and goals
 │   └── current-data.md          # Metrics and current state
-├── plans/                       # Implementation plans (created by /create-plan)
+├── plans/                       # Milestone templates + implementation plans
 ├── outputs/                     # Reports, deliverables, work products
 ├── reference/                   # Guides and templates
 └── scripts/                     # Project-specific scripts

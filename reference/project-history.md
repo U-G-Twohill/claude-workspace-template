@@ -116,6 +116,32 @@ Created a full README.md documenting all 22 commands with usage examples, the 3 
 - `sync-toolkit.md` had the old path as a search hint (updated)
 - `~/.claude/` metadata uses old path in filenames but Claude Code regenerates those
 
+### Session 6: Milestone Templates & Two-Phase claude-init (2026-03-06)
+
+**Plan:** `plans/2026-03-06-toolkit-milestone-templates.md`
+**Commit:** `4c6cd31` — "Add milestone templates and two-phase claude-init"
+
+Part of a larger strategic planning session on Claude.ai designing a three-layer system (Claude Code + Project Hub + Claude.ai). This session focused on the toolkit's contribution: ensuring every new project starts with a sensible milestone roadmap instead of a blank `plans/` directory.
+
+**Milestone template library** — 13 files in `milestone-templates/`:
+- `universal/` (5 files): Setup, Dependencies, Core Build, Testing, Deployment — applied to every project
+- `web-project/` (4 files): Database, Auth, Frontend Polish, Client Handoff — conditionally applied
+- `software/` (3 files): API Design, Packaging, Documentation — applied for tools/plugins
+- `_template.md`: Blank template for authoring new milestone files
+
+All templates use `## Heading` + `- [ ]` format so the Project Hub's `project-scanner.js` auto-imports them into kanban on first scan.
+
+**Two-phase install.sh** — Extended `scripts/install.sh` with an interactive Phase 2:
+- Phase 1 (unchanged): Scaffold project files
+- Phase 2 (new): Asks project type (web/software/experiment/skip), then conditionally asks about database, auth, and client-facing needs. Copies the appropriate templates into `plans/`.
+- `--force` mode skips Phase 2 entirely (no interactive input)
+- Choice 4 (skip) exits cleanly with no templates
+
+**Cross-repo wiring** (blocked on hub Phase 1):
+- Hub scanner parsing verification deferred
+- `KNOWN_PROJECTS` replacement deferred
+- Template-based category inference deferred
+
 ---
 
 ## Architecture Overview

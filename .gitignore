@@ -1,0 +1,2 @@
+# Context exports are session-specific snapshots for Claude.ai — they go stale
+CONTEXT_EXPORT*.md
