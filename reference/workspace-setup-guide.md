@@ -1,6 +1,6 @@
 # Workspace Setup Guide
 
-How to set up the Claude Workspace Toolkit for your projects.
+How to set up the Glen's Toolkit for your projects.
 
 > **Looking for a complete walkthrough?** See **`getting-started.md`** — it walks you through the entire process for both new and existing projects, from installation to a hardened, production-ready codebase.
 
@@ -8,16 +8,10 @@ How to set up the Claude Workspace Toolkit for your projects.
 
 ## What the Toolkit Provides
 
-The Claude Workspace Toolkit is a two-layer system:
+The Glen's Toolkit is a two-layer system:
 
 **Toolkit Layer** (universal — installed once, available everywhere):
-- **`/prime`** — Session initialization. Reads your CLAUDE.md and context files, summarizes understanding, confirms readiness.
-- **`/discover`** — Audits a project for undocumented context and surfaces gaps.
-- **`/scope`** — Guides from discovery through scope definition to first prototype plan.
-- **`/create-plan`** — Creates detailed implementation plans in `plans/` before making changes.
-- **`/implement`** — Executes a plan step-by-step with validation.
-- **`/sync-toolkit`** — Syncs commands between projects and the toolkit repo.
-- **`/harden`** — Finds bugs, security vulnerabilities, edge cases, and performance issues.
+23 commands including `/prime`, `/discover`, `/scope`, `/create-plan`, `/implement`, `/harden`, `/sync-toolkit`, `/sync-docs`, `/autopilot`, `/frontend-design`, `/site-audit`, `/deploy-draft`, `/create-tests`, `/audit-deps`, `/prepare-deploy`, `/proposal`, `/client-report`, `/competitive-intel`, `/setup-hooks`, `/document`, `/connect`, `/onboard-client`, and `/meeting-actions`. See the README for full details on each command.
 
 **Project Layer** (per-project — scaffolded for each repo):
 - **Context files** — Templates for personal info, business info, strategy, and current data.
@@ -32,7 +26,7 @@ The Claude Workspace Toolkit is a two-layer system:
 ### Step 1: Install the Toolkit (one-time)
 
 ```bash
-bash /path/to/claude-workspace-template/scripts/install-toolkit.sh
+bash /path/to/GlensToolkit/scripts/install-toolkit.sh
 ```
 
 This installs all universal commands to `~/.claude/commands/`. They become available in every project, every session.
@@ -40,7 +34,7 @@ This installs all universal commands to `~/.claude/commands/`. They become avail
 ### Step 2: Scaffold a Project
 
 ```bash
-bash /path/to/claude-workspace-template/scripts/install.sh ~/my-project
+bash /path/to/GlensToolkit/scripts/install.sh ~/my-project
 ```
 
 This creates the project-level files: context templates, skills, CLAUDE.md, and empty directories.
@@ -68,11 +62,7 @@ Or use the `cs` alias (see Shell Aliases below).
 
 If you prefer not to use the install scripts:
 
-1. Copy commands to `~/.claude/commands/`:
-   ```
-   prime.md, create-plan.md, implement.md,
-   discover.md, scope.md, sync-toolkit.md, harden.md
-   ```
+1. Copy all 23 command files from the toolkit repo's `.claude/commands/` to `~/.claude/commands/`.
 
 2. Create directories in your project:
    ```
@@ -92,7 +82,7 @@ If you prefer not to use the install scripts:
 When commands are improved in the template repo, update your installation:
 
 ```bash
-bash /path/to/claude-workspace-template/scripts/install-toolkit.sh
+bash /path/to/GlensToolkit/scripts/install-toolkit.sh
 ```
 
 Or with the alias: `claude-toolkit`
@@ -131,8 +121,9 @@ Add to `~/.bashrc` or `~/.zshrc`:
 ```bash
 alias cs='claude "/prime"'
 alias cr='claude --dangerously-skip-permissions "/prime"'
-alias claude-init='bash "/path/to/claude-workspace-template/scripts/install.sh"'
-alias claude-toolkit='bash "/path/to/claude-workspace-template/scripts/install-toolkit.sh"'
+alias crr='claude --resume --dangerously-skip-permissions'
+alias claude-init='bash "/path/to/GlensToolkit/scripts/install.sh"'
+alias claude-toolkit='bash "/path/to/GlensToolkit/scripts/install-toolkit.sh"'
 ```
 
 ### PowerShell
@@ -142,6 +133,7 @@ Add to your PowerShell profile (`$PROFILE`):
 ```powershell
 function cs { claude "/prime" }
 function cr { claude --dangerously-skip-permissions "/prime" }
+function crr { claude --resume --dangerously-skip-permissions }
 ```
 
 ---

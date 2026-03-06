@@ -1,67 +1,278 @@
-# Claude Workspace Toolkit
+# Glen's Toolkit
 
-A two-layer system for working with Claude Code as an agent assistant across sessions and projects. Commands provide the logic; each project provides the data.
+A command system for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) that turns it into a persistent agent assistant across sessions and projects. You install commands once, scaffold any project, and get a full workflow — from scoping through building to hardening — in every repo.
 
-- **Toolkit layer**: 22 universal commands installed once at `~/.claude/commands/`, available in every project
+**Two layers:**
+
+- **Toolkit layer**: 23 universal slash commands installed to `~/.claude/commands/`, available in every project
 - **Project layer**: Per-project scaffolding (context templates, skills, directory structure) installed per repo
 
+Commands provide the logic; each project provides the data.
+
 ---
 
-## Quick Start
+## Table of Contents
+
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+  - [Step 1: Clone the Repo](#step-1-clone-the-repo)
+  - [Step 2: Install the Toolkit (one-time)](#step-2-install-the-toolkit-one-time)
+  - [Step 3: Set Up Shell Aliases](#step-3-set-up-shell-aliases)
+- [Scaffolding a Project](#scaffolding-a-project)
+- [Starting a Session](#starting-a-session)
+- [Shell Aliases Reference](#shell-aliases-reference)
+- [Commands Reference](#commands-reference)
+  - [Session & Discovery](#session--discovery)
+  - [Planning & Building](#planning--building)
+  - [Quality & Security](#quality--security)
+  - [Frontend & Design](#frontend--design)
+  - [Deployment](#deployment)
+  - [Documentation](#documentation)
+  - [Client & Business](#client--business)
+  - [Integration & Tooling](#integration--tooling)
+- [Custom Subagents](#custom-subagents)
+- [Workflows & Best Practices](#workflows--best-practices)
+- [Project Structure](#project-structure)
+- [Updating the Toolkit](#updating-the-toolkit)
+- [Troubleshooting](#troubleshooting)
+
+---
+
+## Prerequisites
+
+- [Claude Code CLI](https://docs.anthropic.com/en/docs/claude-code) installed and authenticated (`claude` command works in your terminal)
+- Bash shell (Git Bash on Windows, or native bash on Mac/Linux)
+
+---
+
+## Installation
+
+### Step 1: Clone the Repo
 
 ```bash
-# 1. Install the toolkit (one-time)
-bash scripts/install-toolkit.sh
-
-# 2. Scaffold a project (per-project)
-bash scripts/install.sh /path/to/your-project
-
-# 3. Start a session
-cd your-project && claude
-/prime
+git clone https://github.com/YOUR_USERNAME/GlensToolkit.git ~/GlensToolkit
 ```
 
-See `reference/getting-started.md` for a full walkthrough.
+Pick any location — the scripts will reference it by absolute path.
+
+### Step 2: Install the Toolkit (one-time)
+
+This copies all 23 slash commands to `~/.claude/commands/` so they're available in every project:
+
+```bash
+bash ~/GlensToolkit/scripts/install-toolkit.sh
+```
+
+The script shows you exactly what it's installing and asks for confirmation. Use `--force` to skip prompts.
+
+### Step 3: Set Up Shell Aliases
+
+Add these to your `~/.bashrc` (Linux/Git Bash) or `~/.zshrc` (Mac):
+
+```bash
+# Scaffold any project with toolkit structure
+alias claude-init='bash ~/GlensToolkit/scripts/install.sh'
+
+# Update toolkit commands (re-run after pulling new versions)
+alias claude-toolkit='bash ~/GlensToolkit/scripts/install-toolkit.sh'
+
+# Start Claude with context — safe mode (asks permission for each action)
+alias cs='claude "/prime"'
+
+# Start Claude with context — run mode (no permission prompts, faster)
+alias cr='claude --dangerously-skip-permissions "/prime"'
+
+# Resume last session in run mode (no permission prompts)
+alias crr='claude --resume --dangerously-skip-permissions'
+```
+
+> Replace `~/GlensToolkit` with wherever you cloned the repo.
+
+Reload your shell:
+
+```bash
+source ~/.bashrc   # or source ~/.zshrc
+```
+
+**Note:** Both install scripts offer to set up their aliases automatically during first run, so you can skip manually adding them if you prefer.
 
 ---
 
-## Commands
+## Scaffolding a Project
 
-### Starting a Session
+Before using the toolkit in a project, you need to scaffold it — this adds the context templates, skills, CLAUDE.md, and directory structure that commands depend on.
+
+```bash
+claude-init ~/my-project
+# or: claude-init .              (scaffold current directory)
+# or: claude-init --force ~/my-project  (skip prompts)
+```
+
+**What this creates:**
+
+```
+my-project/
+├── CLAUDE.md                    # Core context file — Claude reads this every session
+├── .claude/
+│   ├── settings.local.json      # Project-level permissions
+│   └── skills/                  # Domain knowledge for specialized commands
+│       ├── mcp-integration/     # MCP server integration guidance
+│       ├── site-audit/          # Website audit checklists
+│       └── skill-creator/       # Skill authoring guidance
+├── context/                     # YOUR info — fill these in (see below)
+│   ├── personal-info.md         # Your role and responsibilities
+│   ├── business-info.md         # Your org/business overview
+│   ├── strategy.md              # Current priorities and goals
+│   └── current-data.md          # Metrics and current state
+├── plans/                       # Implementation plans (created by /create-plan)
+├── outputs/                     # Reports, deliverables, work products
+├── reference/                   # Guides and templates
+└── scripts/                     # Project-specific scripts
+```
+
+### Fill in Your Context (Important)
+
+After scaffolding, open `context/` and fill in the four template files. This is how Claude understands who you are and what you're working on. The more you provide, the better Claude performs.
+
+| File | What to Write |
+|------|--------------|
+| `personal-info.md` | Your role, what you're responsible for, how this workspace helps you |
+| `business-info.md` | What your org does, who it serves, products/services |
+| `strategy.md` | Current priorities (2-5), what success looks like, open decisions |
+| `current-data.md` | Key metrics, project status, constraints |
+
+You don't need to fill everything perfectly — write what you know and refine over time.
+
+---
+
+## Starting a Session
+
+### Safe mode (recommended for learning or sensitive work)
+
+```bash
+cd ~/my-project
+cs
+```
+
+This launches Claude Code and immediately runs `/prime` to load all your context. Claude will **ask permission** before executing commands, reading sensitive files, or making changes. You review and approve each action.
+
+### Run mode (for trusted, routine work)
+
+```bash
+cd ~/my-project
+cr
+```
+
+Same as `cs` but with `--dangerously-skip-permissions` — Claude executes commands and makes changes **without asking for approval**. Much faster for familiar workflows.
+
+**When to use which:**
+
+| Mode | Alias | Use when... |
+|------|-------|------------|
+| Safe | `cs` | Learning the toolkit, working on sensitive code, unfamiliar tasks, you want to review each action |
+| Run | `cr` | Routine work, trusted tasks, you want speed over oversight, running `/autopilot` |
+
+### Starting without an alias
+
+If you haven't set up aliases:
+
+```bash
+cd ~/my-project
+claude          # then type /prime once Claude starts
+```
+
+### Recommended first-session workflow
+
+After scaffolding a new project:
+
+```bash
+claude-init ~/my-project     # scaffold
+cd ~/my-project
+# fill in context/ files
+cr                           # or cs if you prefer safe mode
+```
+
+Claude will run `/prime`, read your context, and confirm it understands your project. From there, pick a command based on what you need.
+
+---
+
+## Shell Aliases Reference
+
+| Alias | What It Does | When to Use |
+|-------|-------------|-------------|
+| `claude-init` | Scaffolds a project with toolkit structure | Once per project, before first session |
+| `claude-toolkit` | Installs/updates commands to `~/.claude/commands/` | Once initially, then after pulling toolkit updates |
+| `cs` | Starts Claude + `/prime` in safe mode (permissions on) | Learning, sensitive work, reviewing actions |
+| `cr` | Starts Claude + `/prime` in run mode (permissions off) | Trusted work, speed, autopilot |
+| `crr` | Resumes last session in run mode (permissions off) | Picking up where you left off, fast |
+
+**Flags for `claude-init` and `claude-toolkit`:**
+
+| Flag | Effect |
+|------|--------|
+| `--force` | Skip all confirmation prompts |
+| `--no-alias` | Skip the alias setup offer at the end |
+| `--help` | Show usage information |
+
+---
+
+## Commands Reference
+
+All commands are typed inside a Claude Code session (after running `cs` or `cr`). They start with `/`.
+
+### Session & Discovery
 
 #### `/prime`
 
-Run this at the start of every session. Reads your CLAUDE.md and context files, summarizes your project, goals, and available commands. Orients Claude so it knows who you are and what you're working on.
+**Run this at the start of every session.** Reads CLAUDE.md and context files, summarizes your project, goals, and available commands. Orients Claude so it knows who you are and what you're working on.
 
 ```
 /prime
 ```
 
----
+**Best practice:** Always start with `/prime`. Both `cs` and `cr` do this automatically, but if you start Claude manually (`claude`), run `/prime` first.
 
-### Understanding a Project
+---
 
 #### `/discover [scope]`
 
-Use when working with a new or unfamiliar codebase, or when you suspect there's undocumented context hiding in the code. Scans the codebase for architecture patterns, config, dependencies, conventions, and hidden knowledge. Produces a gap analysis comparing what's documented vs. what's actually in the code.
+Audits a codebase for undocumented context — architecture patterns, config, dependencies, conventions, and hidden knowledge. Produces a gap analysis comparing what's documented vs. what's actually in the code.
 
 **Scope options:** `full` (default), `code`, `config`, `deps`, or a specific path
 
 ```
-/discover
-/discover config
+/discover                  # Full audit
+/discover config           # Configuration files only
+/discover src/api/         # Specific directory
 ```
+
+**When to use:**
+- First time working with an existing/unfamiliar codebase
+- You suspect undocumented patterns hiding in the code
+- After joining a project someone else built
+- Periodically to catch documentation drift
+
+**Best practice:** Accept the doc updates it suggests — this makes every subsequent command smarter about your project.
+
+---
 
 #### `/scope [phase]`
 
-Use when you know what project you're working on but need to define what to build. Interactive conversation that walks through vision, users, constraints, and priorities. Produces a scope definition document that bridges to `/create-plan`.
+Interactive conversation that helps define what to build. Walks through vision, users, constraints, and priorities. Produces a scope definition document that feeds directly into `/create-plan`.
 
 **Phase options:** `discover`, `define`, `plan`, or omit for full pipeline
 
 ```
-/scope
-/scope define
+/scope                     # Full scoping pipeline
+/scope define              # Jump to scope definition
 ```
+
+**When to use:**
+- Starting a new feature or project
+- You know what you want but need to define boundaries
+- Before `/create-plan` for anything non-trivial
+
+**Best practice:** Answer Claude's questions honestly — vague answers lead to vague scope. The output is a document in `plans/` that keeps planning grounded.
 
 ---
 
@@ -69,33 +280,57 @@ Use when you know what project you're working on but need to define what to buil
 
 #### `/create-plan [request]`
 
-Use before making any significant changes — new features, structural changes, refactors. Researches the workspace, then produces a detailed implementation plan in `plans/` with step-by-step tasks, rationale, and validation criteria.
+Creates a detailed implementation plan in `plans/` before any code is written. Researches the workspace, then produces step-by-step tasks with rationale, file lists, and validation criteria.
 
 ```
 /create-plan add user authentication with JWT
 /create-plan refactor the API layer to use middleware
+/create-plan fix critical and high findings from harden report
 ```
+
+**When to use:**
+- Before any significant change (new features, refactors, structural changes)
+- After `/harden` finds issues that need fixing
+- When you want to review the approach before committing to it
+
+**Best practice:** Always review the plan before running `/implement`. This is your chance to steer direction, catch misunderstandings, and adjust scope. The plan-then-implement split is intentional — it prevents runaway changes.
+
+---
 
 #### `/implement [plan-path]`
 
-Use after `/create-plan` produces a plan you've approved. Reads the plan and executes every step in order — creating files, modifying code, updating docs. Validates the work against the plan's checklist.
+Executes a plan created by `/create-plan`. Reads each step and executes in order — creating files, writing code, updating docs. Validates work against the plan's checklist.
 
 ```
 /implement plans/2026-03-01-add-authentication.md
 ```
 
+**When to use:** After `/create-plan` produces a plan you've reviewed and approved.
+
+**Best practice:** Don't skip the review step. If something in the plan looks wrong, tell Claude before running `/implement` — it's much easier to fix a plan than to undo implemented code.
+
+---
+
 #### `/autopilot [options]`
 
-Use when you want the full pipeline to run unattended while you're away. State-machine orchestrator that runs discover, scope, plan, implement, and harden — making opinionated decisions where commands would normally ask you. Resumes if interrupted. Learns from each run.
+Runs the full pipeline unattended — discover, scope, plan, implement, and harden in one session. Makes opinionated decisions where commands would normally ask you. Resumes if interrupted. Learns from each run.
 
 **Options:** `--frontend [image]`, `--skip-to <phase>`, `--focus <area>`, `status`
 
 ```
-/autopilot
-/autopilot --focus authentication
-/autopilot --frontend ./reference/homepage.png
-/autopilot status
+/autopilot                              # Full unattended pipeline
+/autopilot --focus authentication       # Narrow to one area
+/autopilot --frontend ./reference/homepage.png  # Include frontend design
+/autopilot --skip-to harden             # Resume from a specific phase
+/autopilot status                       # Check current run state
 ```
+
+**When to use:**
+- You want the full pipeline while you step away
+- Routine work where you trust Claude's decisions
+- Prototyping where speed matters more than precision
+
+**Best practice:** Use `cr` (run mode) with `/autopilot` — it needs to execute without permission prompts. Review the artifacts in `outputs/autopilot/` afterward. The harden loop is capped at 3 passes to prevent runaway.
 
 ---
 
@@ -103,49 +338,89 @@ Use when you want the full pipeline to run unattended while you're away. State-m
 
 #### `/harden [focus]`
 
-Use after building something, before deploying, or periodically on any project. Tries to break your code — checks for security vulnerabilities (OWASP top 10), logic bugs, edge cases, performance issues, and validation gaps. Produces a severity-ranked report. Maintains a knowledge base that improves across audits.
+Systematically tries to break your code. Checks for security vulnerabilities (OWASP top 10), logic bugs, edge cases, performance bottlenecks, and validation gaps. Produces a severity-ranked report. Maintains a knowledge base that gets smarter with every audit.
 
 **Focus options:** `full` (default), `security`, `bugs`, `edge-cases`, `performance`, `validation`, or a specific path
 
 ```
-/harden
-/harden security
-/harden src/api/
+/harden                    # Full audit
+/harden security           # Security vulnerabilities only
+/harden bugs               # Functional bugs only
+/harden src/api/           # Specific directory
 ```
+
+**When to use:**
+- After building anything (features, fixes, refactors)
+- Before deploying
+- Periodically on any project as a health check
+- After `/implement` completes
+
+**Best practice:** Run `/harden` after every significant change. The knowledge base at `outputs/harden-knowledge.md` improves with each run — don't delete it. The standard loop is:
+
+```
+/harden → /create-plan fixes → /implement → /harden (repeat until clean)
+```
+
+---
 
 #### `/create-tests [target]`
 
-Use after building features, or when a project has no tests. Analyzes your code and generates real test suites — unit, integration, and edge case tests. Converts harden findings into regression tests so fixed bugs stay fixed.
+Analyzes code and generates real test suites — unit, integration, and edge case tests. Auto-detects your test framework. Converts harden findings into regression tests so fixed bugs stay fixed.
 
 ```
-/create-tests
-/create-tests src/auth/
-/create-tests utils.ts
+/create-tests                  # Key modules across the project
+/create-tests src/auth/        # Specific directory
+/create-tests utils.ts         # Specific file
 ```
+
+**When to use:**
+- After building features
+- When a project has no tests
+- After fixing harden findings (generates regression tests)
+
+**Best practice:** Run tests after generation to verify they pass. Claude does this automatically, but check the output.
+
+---
 
 #### `/audit-deps [focus]`
 
-Use periodically on any project, or before deploying. Runs native audit tools (npm audit, pip audit, etc.), identifies outdated and abandoned packages, and produces a prioritized upgrade plan.
+Scans dependencies for security vulnerabilities, outdated packages, and upgrade opportunities. Uses native audit tools (npm audit, pip audit, cargo audit, etc.).
 
 **Focus options:** `full` (default), `security`, `outdated`, `upgrade`, or a specific package name
 
 ```
-/audit-deps
-/audit-deps security
-/audit-deps lodash
+/audit-deps                    # Full audit
+/audit-deps security           # Security vulnerabilities only
+/audit-deps outdated           # Outdated packages
+/audit-deps lodash             # Specific package
 ```
+
+**When to use:**
+- Before deploying
+- Periodically as maintenance
+- When you suspect a dependency has known vulnerabilities
+
+**Best practice:** Run this alongside `/harden` — they complement each other. `/harden` checks your code; `/audit-deps` checks your supply chain.
+
+---
 
 #### `/setup-hooks [preset]`
 
-Use when setting up a project for continuous quality enforcement. Detects your project's formatters, linters, and test runners, then configures Claude Code hooks that auto-format after edits, block dangerous operations, and verify tests pass.
+Configures Claude Code hooks for continuous quality enforcement. Detects your project's formatters, linters, and test runners, then sets up auto-formatting, safety guards, and test gates.
 
 **Presets:** `quality`, `safety`, `format`, `full`, `status`
 
 ```
-/setup-hooks full
-/setup-hooks safety
-/setup-hooks status
+/setup-hooks full              # All hooks
+/setup-hooks safety            # Block dangerous operations only
+/setup-hooks quality           # Format + lint + test gates
+/setup-hooks status            # Show current configuration
 ```
+
+**When to use:**
+- When setting up a new project for the first time
+- When you want Claude to auto-format code after edits
+- When you want guardrails against destructive operations
 
 ---
 
@@ -153,12 +428,19 @@ Use when setting up a project for continuous quality enforcement. Detects your p
 
 #### `/frontend-design [reference-image]`
 
-Use when building UI — either matching a design mockup pixel-perfectly, or designing from scratch with high craft. Screenshot-driven workflow using Puppeteer: builds the UI, screenshots it, compares against the reference, and iterates. Minimum 2 comparison rounds.
+Screenshot-driven UI development. Provide a design mockup and Claude matches it pixel-perfectly, or omit the reference to design from scratch. Uses Puppeteer to screenshot localhost, compare against the reference, and iterate (minimum 2 comparison rounds).
 
 ```
-/frontend-design ./reference/homepage-mockup.png
-/frontend-design
+/frontend-design ./reference/homepage-mockup.png   # Match a design
+/frontend-design                                    # Design from scratch
 ```
+
+**When to use:**
+- Translating a design mockup to code
+- Building UI from scratch with high craft
+- Iterating on frontend appearance
+
+**Best practice:** Put reference images in `reference/` or `brand_assets/`. Claude auto-detects existing dev servers (Vite, Next, etc.) and CSS frameworks.
 
 ---
 
@@ -166,29 +448,44 @@ Use when building UI — either matching a design mockup pixel-perfectly, or des
 
 #### `/prepare-deploy [focus]`
 
-Use before deploying a project for the first time, or to validate production readiness. Creates deployment infrastructure — CI/CD pipelines (GitHub Actions), Dockerfiles, `.env.example`, and platform-specific config. Produces a readiness checklist and flags unresolved harden findings as blockers.
+Validates production readiness and generates deployment infrastructure — CI/CD pipelines, Dockerfiles, `.env.example`, and platform-specific config. Does not deploy — makes deployment safe and possible.
 
 **Focus options:** `full` (default), `ci`, `docker`, `checklist`, `env`, or a platform name (`vercel`, `railway`, `fly`)
 
 ```
-/prepare-deploy
-/prepare-deploy vercel
-/prepare-deploy docker
-/prepare-deploy checklist
+/prepare-deploy                # Full production readiness check
+/prepare-deploy vercel         # Vercel-specific config
+/prepare-deploy docker         # Dockerfile and docker-compose
+/prepare-deploy ci             # CI/CD pipeline only
+/prepare-deploy checklist      # Readiness checklist only
 ```
+
+**When to use:**
+- Before deploying a project for the first time
+- Setting up CI/CD
+- Validating production readiness
+
+**Best practice:** Run `/harden` first — `/prepare-deploy` flags unresolved harden findings as deployment blockers.
+
+---
 
 #### `/deploy-draft [action]`
 
-Use when you have a static site ready to share with a client for review. Handles the full Netlify workflow — setup, site creation, linking, and deploying. Draft deploys give you a preview URL; prod deploys go live.
+Deploys static sites to Netlify preview URLs for client review. Handles setup, site creation, linking, and deploying.
 
-**Actions:** `draft` (default), `prod`, `status`, `setup`
+**Actions:** `draft` (default), `prod`, `status`, `setup`, or a custom deploy message
 
 ```
-/deploy-draft
-/deploy-draft prod
-/deploy-draft status
-/deploy-draft "Updated hero section"
+/deploy-draft                          # Deploy a draft preview
+/deploy-draft prod                     # Deploy to production (confirms first)
+/deploy-draft status                   # Show current site info
+/deploy-draft setup                    # Set up Netlify for the project
+/deploy-draft "Updated hero section"   # Draft with a custom message
 ```
+
+**When to use:**
+- Sharing a preview URL with a client for review
+- Quick deploys during development
 
 ---
 
@@ -196,15 +493,21 @@ Use when you have a static site ready to share with a client for review. Handles
 
 #### `/document [focus]`
 
-Use when a project needs documentation or docs have gone stale. Analyzes the codebase and generates accurate docs — API documentation, architecture decisions, deployment guides, troubleshooting runbooks, or README enhancements.
+Analyzes the codebase and generates accurate documentation. Enhances existing docs rather than duplicating.
 
-**Focus options:** `full` (default), `api`, `architecture`, `deploy`, `runbook`, `readme`
+**Focus options:** `full` (default), `api`, `architecture`, `deploy`, `runbook`, `readme`, or a specific file/module
 
 ```
-/document
-/document api
-/document readme
+/document                  # Generate all applicable docs
+/document api              # API endpoint documentation
+/document architecture     # Architecture and design decisions
+/document readme           # Create or enhance README
 ```
+
+**When to use:**
+- Project needs documentation
+- Docs have gone stale
+- Onboarding new team members
 
 ---
 
@@ -212,65 +515,74 @@ Use when a project needs documentation or docs have gone stale. Analyzes the cod
 
 #### `/proposal [input]`
 
-Use when a potential client sends an RFP or you need to write a proposal. Pulls from your context files, case studies, and pricing references to generate a near-complete proposal with executive summary, approach, deliverables, timeline, and pricing structure.
+Generates client proposals from a brief, RFP, or conversation. Pulls from context files, case studies, and pricing references.
 
 ```
-/proposal
-/proposal "Acme Corp needs a website redesign, budget ~$30k"
-/proposal ./reference/rfp-acme.pdf
+/proposal                                              # Interactive creation
+/proposal "Acme Corp needs a website redesign, ~$30k"  # From description
+/proposal ./reference/rfp-acme.pdf                     # From RFP document
 ```
+
+---
 
 #### `/client-report [type]`
 
-Use when you need to send a client a progress update, audit summary, monthly report, or handoff document. Transforms technical outputs (harden reports, site audits, implementation summaries) into client-friendly language with no jargon.
+Transforms technical outputs (harden reports, site audits, implementation summaries) into client-friendly reports with no jargon.
 
 **Types:** `progress`, `audit`, `monthly`, `handoff`, or omit for auto-detection
 
 ```
-/client-report
-/client-report monthly
-/client-report audit
-/client-report handoff
+/client-report                 # Auto-detect from available data
+/client-report monthly         # Monthly maintenance report
+/client-report handoff         # Project handoff documentation
 ```
+
+---
 
 #### `/onboard-client [input]`
 
-Use when a client signs and you need to kick off the engagement. Generates a complete onboarding package: welcome email, project timeline, access request form, and kickoff meeting agenda.
+Generates a complete client onboarding package — welcome email, project timeline, access request forms, and kickoff agenda.
 
 ```
 /onboard-client "Acme Corp"
 /onboard-client ./outputs/proposal-acme-2026-03-01.md
 ```
 
+---
+
 #### `/competitive-intel [target]`
 
-Use when you want to understand a competitor's positioning, offerings, and weaknesses. Researches publicly available information and produces an actionable intelligence report with opportunities, threats, and change tracking across repeat analyses.
+Researches competitors using publicly available information. Produces positioning analysis, feature comparison, and opportunity identification.
 
 ```
-/competitive-intel https://competitor.com
-/competitive-intel "Acme Agency"
-/competitive-intel landscape
+/competitive-intel https://competitor.com      # Deep analysis
+/competitive-intel "Acme Agency"               # By company name
+/competitive-intel landscape                   # Multi-competitor overview
 ```
 
-#### `/site-audit [url] [focus]`
+---
 
-Use when auditing a live website. Fetches the URL and audits across SEO, performance, accessibility, analytics, and security. Scores each category A-F with a client-ready report.
+#### `/site-audit [url] [focus] [export]`
+
+Audits a live website across SEO, performance, accessibility, analytics, and security. Scores each category A-F with a client-ready report.
 
 **Focus options:** `full` (default), `seo`, `performance`, `accessibility`, `analytics`, `security`
 
 ```
-/site-audit https://clientsite.com
-/site-audit https://clientsite.com seo
-/site-audit https://clientsite.com full export
+/site-audit https://clientsite.com                 # Full audit
+/site-audit https://clientsite.com seo             # SEO only
+/site-audit https://clientsite.com full export     # Full with individual reports
 ```
+
+---
 
 #### `/meeting-actions [input]`
 
-Use after any meeting. Extracts decisions, action items with owners, open questions, and key information. Drafts follow-up emails including a meeting summary.
+Extracts decisions, action items with owners, open questions, and follow-ups from meeting notes. Drafts follow-up emails.
 
 ```
 /meeting-actions ./notes/kickoff.md
-/meeting-actions "Client wants to launch by April. John handles DNS. Need brand assets by Friday."
+/meeting-actions "Client wants April launch. John handles DNS. Need assets by Friday."
 ```
 
 ---
@@ -279,25 +591,47 @@ Use after any meeting. Extracts decisions, action items with owners, open questi
 
 #### `/connect [service]`
 
-Use when you want Claude to interact directly with external services via MCP — databases, Slack, Figma, GitHub, Stripe, and more. Walks through setup, credentials, and verification.
+Sets up MCP (Model Context Protocol) server integrations to connect Claude with external services — databases, APIs, Slack, Figma, and more.
 
 ```
-/connect list
-/connect postgres
-/connect figma
-/connect slack
+/connect list              # Show all available integrations
+/connect postgres          # Set up PostgreSQL access
+/connect figma             # Connect to Figma
+/connect slack             # Set up Slack messaging
 ```
+
+---
 
 #### `/sync-toolkit [action]`
 
-Use when you've refined a command in a project and want to push it back to the toolkit repo, or pull updates from the toolkit.
+Syncs commands between a project and the toolkit repo. Use when you've refined a command in a project and want to push it back, or pull updates.
 
 **Actions:** `status`, `push [command]`, `pull [command]`, `push-all`
 
 ```
-/sync-toolkit status
-/sync-toolkit push proposal.md
+/sync-toolkit status                   # Compare project vs toolkit
+/sync-toolkit push proposal.md         # Push a refined command back
+/sync-toolkit pull harden.md           # Pull latest from toolkit
 ```
+
+---
+
+#### `/sync-docs [action]`
+
+Audits all toolkit documentation for accuracy and updates anything out of date. Run at the end of a session to catch documentation drift, then optionally commit and push.
+
+**Actions:** `check` (audit only), `fix` (default — audit and update), `push` (audit, update, commit, and push)
+
+```
+/sync-docs                     # Audit and fix stale docs
+/sync-docs check               # Report what's out of date without changing anything
+/sync-docs push                # Fix everything, commit, and push to GitHub
+```
+
+**When to use:**
+- End of any session where you've made changes to the toolkit
+- After adding, removing, or renaming commands
+- After changing aliases or install scripts
 
 ---
 
@@ -308,8 +642,10 @@ Three persistent subagents are available in every project. They learn from each 
 | Agent | What It Does | Memory Scope |
 |-------|-------------|-------------|
 | **code-reviewer** | Reviews code changes for bugs, security, and quality | Project (learns this codebase's patterns) |
-| **security-auditor** | Specialized security analysis and vulnerability detection | User (learns across all your projects) |
+| **security-auditor** | Specialized security analysis and vulnerability detection | User (shared across all your projects) |
 | **client-communicator** | Drafts client-facing messages and emails in your tone | Project (learns client-specific preferences) |
+
+**How to invoke:**
 
 ```
 "Have the code reviewer check my changes"
@@ -319,73 +655,150 @@ Three persistent subagents are available in every project. They learn from each 
 
 ---
 
-## Typical Workflows
+## Workflows & Best Practices
 
-**New client project:**
+### Common Workflows
+
+**New project (from scratch):**
+
 ```
-/prime → /scope → /create-plan → /implement → /create-tests → /harden → /prepare-deploy → /deploy-draft
+claude-init ~/my-project → fill in context/ → cr
+/prime → /scope → /create-plan → /implement → /create-tests → /harden → /prepare-deploy
 ```
 
-**Existing project maintenance:**
+**Existing project (bring up to scratch):**
+
 ```
-/prime → /audit-deps → /harden → /create-plan fixes → /implement → /client-report monthly
+claude-init ~/existing-project → fill in context/ → cr
+/prime → /discover → /harden → /create-plan fixes → /implement → /harden (repeat)
 ```
 
 **Winning new work:**
+
 ```
 /competitive-intel → /proposal → (client signs) → /onboard-client
 ```
 
-**Unattended full pipeline:**
+**Routine maintenance:**
+
 ```
-/autopilot
+/prime → /audit-deps → /harden → /create-plan fixes → /implement → /client-report monthly
 ```
 
-**Hardening loop (repeat until clean):**
+**Unattended full pipeline:**
+
+```
+cr → /autopilot
+```
+
+**The hardening loop (repeat until clean):**
+
 ```
 /harden → /create-plan fixes → /implement → /harden
 ```
 
----
+### Best Practices
 
-## Installation
+1. **Always start with `/prime`.** Both `cs` and `cr` do this automatically. If you start Claude manually, run `/prime` first. It takes seconds and prevents Claude from working with stale context.
 
-### Install Commands (one-time)
+2. **Fill in context files.** Claude calibrates its approach based on what you tell it. Vague context = vague results. You don't need to be exhaustive — just honest and specific.
 
-```bash
-bash scripts/install-toolkit.sh          # Interactive
-bash scripts/install-toolkit.sh --force  # Skip prompts
-```
+3. **Plan before building.** The `/create-plan` → `/implement` split exists so you can review the approach before code is written. Always read the plan before running `/implement`.
 
-Installs all commands to `~/.claude/commands/` — available in every project.
+4. **Harden after every significant change.** `/harden` catches regressions and edge cases you didn't think of. The knowledge base (`outputs/harden-knowledge.md`) improves with every run — don't delete it.
 
-### Scaffold a Project (per-project)
+5. **Use `/discover` on unfamiliar codebases.** It surfaces patterns and conventions that would take hours to find manually.
 
-```bash
-bash scripts/install.sh ~/my-project            # Interactive
-bash scripts/install.sh --force ~/my-project     # Skip prompts
-```
+6. **Use `cr` for speed, `cs` for oversight.** When learning the toolkit or doing sensitive work, use `cs` so you can see what Claude is doing. Switch to `cr` once you're comfortable.
 
-Creates `context/`, `plans/`, `outputs/`, `reference/`, and a project `CLAUDE.md`.
+7. **Don't delete `outputs/`.** Harden knowledge bases, audit reports, and autopilot learnings accumulate intelligence over time. Each run builds on the last.
+
+8. **Keep CLAUDE.md current.** This file is loaded every session. If you make significant changes to your project (new commands, new structure, new conventions), update CLAUDE.md so future sessions have accurate context.
 
 ---
 
 ## Project Structure
 
+After scaffolding, a project looks like this:
+
 ```
 .
-├── CLAUDE.md                  # Core context — always loaded by Claude
+├── CLAUDE.md                  # Core context — loaded by Claude every session
 ├── .claude/
-│   ├── commands/              # 22 slash commands (toolkit layer)
+│   ├── commands/              # 23 slash commands (toolkit layer, at ~/.claude/commands/)
 │   ├── agents/                # 3 custom subagents with persistent memory
 │   ├── skills/                # Domain knowledge (project layer)
 │   └── settings.local.json    # Project-level permissions
 ├── context/                   # Who you are, your org, your goals
-├── plans/                     # Implementation plans
+│   ├── personal-info.md
+│   ├── business-info.md
+│   ├── strategy.md
+│   └── current-data.md
+├── plans/                     # Implementation plans (created by /create-plan)
 ├── outputs/                   # Reports, deliverables, work products
 ├── reference/                 # Guides and templates
-└── scripts/                   # Install scripts
+└── scripts/                   # Project-specific scripts
 ```
+
+**Key directories:**
+
+| Directory | Purpose |
+|-----------|---------|
+| `context/` | Your info — read by `/prime` to orient Claude |
+| `plans/` | Implementation plans — created by `/create-plan`, executed by `/implement` |
+| `outputs/` | Reports, audits, deliverables — accumulates intelligence over time |
+| `reference/` | Guides, templates, and reference material |
+
+---
+
+## Updating the Toolkit
+
+When commands are updated in the GlensToolkit repo:
+
+```bash
+cd ~/GlensToolkit
+git pull                       # Get latest changes
+claude-toolkit                 # Re-install commands to ~/.claude/commands/
+```
+
+The installer shows you exactly what's new, updated, or unchanged before copying anything.
+
+To update a single project's scaffolding (skills, settings):
+
+```bash
+claude-init --force ~/my-project
+```
+
+> **Note:** This overwrites project-level files (CLAUDE.md, skills, settings). If you've customized these, back them up first or use `/sync-toolkit` to manage changes.
+
+---
+
+## Troubleshooting
+
+**Commands not showing up after install:**
+- Verify they're in `~/.claude/commands/`: `ls ~/.claude/commands/`
+- Re-run `claude-toolkit` to reinstall
+- Restart Claude Code (commands are loaded at startup)
+
+**`claude-init` or `claude-toolkit` not found:**
+- Add the aliases to your shell profile (see [Step 3](#step-3-set-up-shell-aliases))
+- Run `source ~/.bashrc` (or `~/.zshrc`) to reload
+- On Windows with Git Bash, ensure you're editing `~/.bashrc`
+
+**`cs` or `cr` not found:**
+- Same as above — add to shell profile and reload
+
+**Permission denied errors with `cr`:**
+- `cr` uses `--dangerously-skip-permissions` which bypasses Claude's safety prompts
+- If you're getting OS-level permission errors, check file permissions on the target project
+
+**Context files still have placeholders:**
+- Open `context/` in your project and fill in the templates
+- Claude works without them, but results are much better with real context
+
+**`/prime` shows stale information:**
+- Update CLAUDE.md and context files to reflect current state
+- Claude reads these files fresh each session
 
 ---
 

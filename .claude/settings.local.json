@@ -3,7 +3,8 @@
     "allow": [
       "Bash(source:*)",
       "Bash(powershell.exe:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(~/.bashrc:*)"
     ]
   }
 }

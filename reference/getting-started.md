@@ -1,6 +1,6 @@
 # Getting Started
 
-> The complete walkthrough for using the Claude Workspace Toolkit — from installation to a production-ready project.
+> The complete walkthrough for using the Glen's Toolkit — from installation to a production-ready project.
 
 Pick your path:
 
@@ -18,12 +18,12 @@ Both paths start with the same one-time setup, then diverge.
 This installs universal commands to `~/.claude/commands/` — available in every project, every session. You only do this once (and again when commands are updated).
 
 ```bash
-bash /path/to/claude-workspace-template/scripts/install-toolkit.sh
+bash /path/to/GlensToolkit/scripts/install-toolkit.sh
 ```
 
 It will show you what's being installed and offer to add a `claude-toolkit` alias for easy re-runs.
 
-**What this installs (7 commands):**
+**What this installs (23 commands):**
 
 | Command | What It Does |
 |---------|-------------|
@@ -33,7 +33,23 @@ It will show you what's being installed and offer to add a `claude-toolkit` alia
 | `/create-plan` | Creates detailed implementation plans |
 | `/implement` | Executes plans step by step |
 | `/sync-toolkit` | Syncs command improvements between projects |
+| `/sync-docs` | Audits and updates all documentation |
 | `/harden` | Finds bugs, security issues, edge cases |
+| `/frontend-design` | Screenshot-driven UI development |
+| `/site-audit` | Website SEO, performance, security audits |
+| `/deploy-draft` | Deploy static sites to Netlify for review |
+| `/autopilot` | Run full pipeline unattended |
+| `/create-tests` | Auto-generate test suites |
+| `/audit-deps` | Dependency security and freshness audit |
+| `/prepare-deploy` | Production readiness and CI/CD setup |
+| `/proposal` | Generate client proposals |
+| `/client-report` | Automated client-facing reports |
+| `/competitive-intel` | Competitor analysis and intelligence |
+| `/setup-hooks` | Configure quality enforcement hooks |
+| `/document` | Auto-generate project documentation |
+| `/connect` | MCP server integration setup |
+| `/onboard-client` | Client onboarding package generation |
+| `/meeting-actions` | Meeting notes to action items |
 
 ### 2. Set Up Shell Aliases (Optional but Recommended)
 
@@ -42,11 +58,12 @@ Add these to your `~/.bashrc` or `~/.zshrc`:
 ```bash
 alias cs='claude "/prime"'                    # Quick session start
 alias cr='claude --dangerously-skip-permissions "/prime"'  # Auto-approve mode
-alias claude-toolkit='bash "/path/to/claude-workspace-template/scripts/install-toolkit.sh"'
-alias claude-init='bash "/path/to/claude-workspace-template/scripts/install.sh"'
+alias crr='claude --resume --dangerously-skip-permissions' # Resume last session, no prompts
+alias claude-toolkit='bash "/path/to/GlensToolkit/scripts/install-toolkit.sh"'
+alias claude-init='bash "/path/to/GlensToolkit/scripts/install.sh"'
 ```
 
-Replace `/path/to/claude-workspace-template` with the actual path to this repo.
+Replace `/path/to/GlensToolkit` with the actual path to this repo.
 
 ---
 
@@ -57,7 +74,7 @@ Replace `/path/to/claude-workspace-template` with the actual path to this repo.
 ### Step 1: Scaffold the Project
 
 ```bash
-bash /path/to/claude-workspace-template/scripts/install.sh ~/my-new-project
+bash /path/to/GlensToolkit/scripts/install.sh ~/my-new-project
 # or with alias: claude-init ~/my-new-project
 ```
 
@@ -186,7 +203,7 @@ For each new feature or change:
 ### Step 1: Scaffold the Workspace
 
 ```bash
-bash /path/to/claude-workspace-template/scripts/install.sh ~/my-existing-project
+bash /path/to/GlensToolkit/scripts/install.sh ~/my-existing-project
 # or with alias: claude-init ~/my-existing-project
 ```
 
@@ -315,7 +332,23 @@ For ongoing development:
 | Execute a plan | `/implement plans/[file].md` |
 | Find bugs, security issues, edge cases | `/harden` |
 | Focus on just security issues | `/harden security` |
+| Generate tests for my code | `/create-tests` |
+| Audit dependencies for vulnerabilities | `/audit-deps` |
+| Build UI from a mockup | `/frontend-design ./mockup.png` |
+| Audit a live website | `/site-audit https://example.com` |
+| Deploy a draft preview | `/deploy-draft` |
+| Run everything unattended | `/autopilot` |
+| Prepare for production deployment | `/prepare-deploy` |
+| Generate a client proposal | `/proposal` |
+| Create a client report | `/client-report` |
+| Research a competitor | `/competitive-intel https://competitor.com` |
+| Generate project documentation | `/document` |
+| Set up quality hooks | `/setup-hooks full` |
+| Connect an external service | `/connect list` |
+| Process meeting notes | `/meeting-actions ./notes.md` |
+| Onboard a new client | `/onboard-client "Client Name"` |
 | Sync improved commands back to toolkit | `/sync-toolkit push` |
+| Update all documentation | `/sync-docs push` |
 
 ---
 

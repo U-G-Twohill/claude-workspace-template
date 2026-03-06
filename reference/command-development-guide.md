@@ -1,6 +1,6 @@
 # Command Development Guide
 
-How to author, test, and deploy new commands for the Claude Workspace Toolkit.
+How to author, test, and deploy new commands for the Glen's Toolkit.
 
 ---
 
@@ -65,7 +65,7 @@ variable_name: $ARGUMENTS (description of expected input and defaults)
 
 ### Path A: Template Repo First (recommended)
 
-1. Author the command in `claude-workspace-template/.claude/commands/`
+1. Author the command in `GlensToolkit/.claude/commands/`
 2. Run `install-toolkit.sh` to deploy to `~/.claude/commands/`
 3. Test in a real project: `cd ~/my-project && claude "/my-command"`
 4. Iterate: edit in template repo → redeploy → test

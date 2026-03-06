@@ -1,4 +1,4 @@
-# Plan: Architect the Claude Workspace Toolkit (Hybrid Two-Layer System)
+# Plan: Architect the Glen's Toolkit (Hybrid Two-Layer System)
 
 **Created:** 2026-02-28
 **Status:** Implemented
@@ -10,7 +10,7 @@
 
 ### What This Plan Accomplishes
 
-Redesigns the claude-workspace-template into a proper toolkit with two distinct layers: a **universal toolkit** installed once at `~/.claude/` that provides commands and skills to every project, and a **project scaffolding** layer that bootstraps individual projects with just the data files they need (context templates, directory structure, CLAUDE.md skeleton). Includes a sync mechanism to promote refined commands from projects back to the toolkit without manual copy-paste.
+Redesigns the GlensToolkit into a proper toolkit with two distinct layers: a **universal toolkit** installed once at `~/.claude/` that provides commands and skills to every project, and a **project scaffolding** layer that bootstraps individual projects with just the data files they need (context templates, directory structure, CLAUDE.md skeleton). Includes a sync mechanism to promote refined commands from projects back to the toolkit without manual copy-paste.
 
 ### Why This Matters
 
@@ -22,7 +22,7 @@ As the command library grows (discovery pipeline, context-audit, scoping, etc.),
 
 ### Relevant Existing Structure
 
-**Template repo (`D:\Repos\claude-workspace-template\`):**
+**Template repo (`D:\Repos\GlensToolkit\`):**
 ```
 .claude/commands/prime.md            # Session init — reads CLAUDE.md + context/
 .claude/commands/create-plan.md      # Planning workflow
@@ -453,7 +453,7 @@ Build the feedback loop command that promotes battle-tested commands from a proj
 ```markdown
 # Sync Toolkit
 
-> Sync commands or skills between this project and the Claude Workspace Toolkit repo.
+> Sync commands or skills between this project and the Glen's Toolkit repo.
 
 ## Variables
 
@@ -461,13 +461,13 @@ action: $ARGUMENTS (required — "push [command-name]", "pull [command-name]", "
 
 ## Instructions
 
-You manage the synchronization between project-level commands/skills and the Claude Workspace Toolkit repo.
+You manage the synchronization between project-level commands/skills and the Glen's Toolkit repo.
 
 ### Setup
 
 The toolkit repo location must be known. Check for it in this order:
 1. Environment variable: `$CLAUDE_TOOLKIT_REPO`
-2. Common locations: `~/Repos/claude-workspace-template`, `~/claude-workspace-template`, `D:/Repos/claude-workspace-template`
+2. Common locations: `~/Repos/GlensToolkit`, `~/GlensToolkit`, `D:/Repos/GlensToolkit`
 3. If not found, ask the user for the path
 
 ### Actions
@@ -683,7 +683,7 @@ Add the toolkit installer alias.
 
 - Add `claude-toolkit` alias to the Setup block:
   ```bash
-  alias claude-toolkit='bash "/path/to/claude-workspace-template/scripts/install-toolkit.sh"'
+  alias claude-toolkit='bash "/path/to/GlensToolkit/scripts/install-toolkit.sh"'
   ```
 - Add a `### claude-toolkit — Install/Update Toolkit` section documenting usage
 

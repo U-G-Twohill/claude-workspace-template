@@ -1,21 +1,41 @@
 # Shell Aliases for Claude Code
 
-Shell aliases streamline working with the Claude Workspace Toolkit.
+Shell aliases streamline working with GlensToolkit.
 
 ## Setup
 
-Add these lines to your `~/.zshrc` (or `~/.bashrc`):
+### Bash / Git Bash (Linux, Mac, Windows Git Bash)
+
+Add these lines to your `~/.bashrc` (or `~/.zshrc`):
 
 ```bash
 alias cs='claude "/prime"'
 alias cr='claude --dangerously-skip-permissions "/prime"'
-alias claude-init='bash "/path/to/claude-workspace-template/scripts/install.sh"'
-alias claude-toolkit='bash "/path/to/claude-workspace-template/scripts/install-toolkit.sh"'
+alias crr='claude --resume --dangerously-skip-permissions'
+alias claude-init='bash "/path/to/GlensToolkit/scripts/install.sh"'
+alias claude-toolkit='bash "/path/to/GlensToolkit/scripts/install-toolkit.sh"'
 ```
 
-> Replace `/path/to/claude-workspace-template` with the actual path to your template repo. Both install scripts offer to set up their aliases automatically during first run.
+> Replace `/path/to/GlensToolkit` with the actual path to your toolkit repo. Both install scripts offer to set up their aliases automatically during first run.
 
-Then reload your shell: `source ~/.zshrc`
+Then reload your shell: `source ~/.bashrc`
+
+### PowerShell (Windows)
+
+Add these to your PowerShell profile (run `echo $PROFILE` to find the path):
+
+```powershell
+# Glen's Toolkit aliases
+function claude-init { & "C:\Program Files\Git\bin\bash.exe" "/path/to/GlensToolkit/scripts/install.sh" $args }
+function claude-toolkit { & "C:\Program Files\Git\bin\bash.exe" "/path/to/GlensToolkit/scripts/install-toolkit.sh" $args }
+function cs { claude "/prime" }
+function cr { claude --dangerously-skip-permissions "/prime" }
+function crr { claude --resume --dangerously-skip-permissions }
+```
+
+> Replace `/path/to/GlensToolkit` and the Git bash path with your actual paths.
+
+Then reload: `. $PROFILE`
 
 ## The Aliases
 
@@ -39,13 +59,23 @@ Launches Claude Code with permission prompts disabled, then runs `/prime`. Claud
 
 **Use when:** You trust the task, want faster iteration, or are doing routine work where constant approvals slow you down.
 
+### `crr` — Claude Resume Run
+
+```bash
+alias crr='claude --resume --dangerously-skip-permissions'
+```
+
+Resumes the last Claude Code session with permission prompts disabled. Picks up exactly where you left off without re-running `/prime` (your context is already loaded from the previous session).
+
+**Use when:** You closed a session and want to continue where you left off, without permission prompts.
+
 ### `claude-toolkit` — Install/Update Toolkit
 
 ```bash
-alias claude-toolkit='bash "/path/to/claude-workspace-template/scripts/install-toolkit.sh"'
+alias claude-toolkit='bash "/path/to/GlensToolkit/scripts/install-toolkit.sh"'
 ```
 
-Installs or updates universal commands to `~/.claude/commands/`. These commands (`/prime`, `/discover`, `/scope`, `/create-plan`, `/implement`, `/sync-toolkit`) become available in every project.
+Installs or updates all 23 universal commands to `~/.claude/commands/`. These commands become available in every project.
 
 ```bash
 claude-toolkit              # Interactive install/update
@@ -53,12 +83,12 @@ claude-toolkit --force      # Skip prompts
 claude-toolkit --help       # Show usage info
 ```
 
-**Run once** to set up, then again whenever you update commands in the template repo.
+**Run once** to set up, then again whenever you update commands in the toolkit repo.
 
 ### `claude-init` — Scaffold a Project
 
 ```bash
-alias claude-init='bash "/path/to/claude-workspace-template/scripts/install.sh"'
+alias claude-init='bash "/path/to/GlensToolkit/scripts/install.sh"'
 ```
 
 Scaffolds a project with context templates, skills, CLAUDE.md, and directory structure. Does not install commands — those come from the toolkit layer via `claude-toolkit`.
@@ -75,12 +105,13 @@ claude-init --help              # Show usage info
 - `--no-alias` — Skip the alias setup offer at the end
 - `--help` — Show usage information
 
-## Why `cs` and `cr`?
+## Why `cs`, `cr`, and `crr`?
 
 - **`cs`** gives you oversight — good for unfamiliar tasks, sensitive operations, or when you want to learn what Claude is doing
 - **`cr`** gives you speed — good for familiar workflows where you trust Claude to operate autonomously
+- **`crr`** gives you continuity — resume a previous session at full speed
 
-Both run `/prime` automatically so Claude starts every session fully oriented to your workspace, goals, and context.
+Both `cs` and `cr` run `/prime` automatically so Claude starts every session fully oriented to your workspace, goals, and context. `crr` skips `/prime` because the previous session's context is already loaded.
 
 ## First-Time Setup
 
@@ -88,3 +119,4 @@ Both run `/prime` automatically so Claude starts every session fully oriented to
 2. Run `claude-init ~/my-project` to scaffold each project
 3. Fill in `context/` files in each project
 4. Start sessions with `cs` or `cr`
+5. Resume sessions with `crr`

@@ -1,6 +1,6 @@
 # Sync Toolkit
 
-> Sync commands or skills between this project and the Claude Workspace Toolkit repo.
+> Sync commands or skills between this project and the GlensToolkit repo.
 
 ## Variables
 
@@ -8,13 +8,13 @@ action: $ARGUMENTS (required — "push [command-name]", "pull [command-name]", "
 
 ## Instructions
 
-You manage the synchronization between project-level commands/skills and the Claude Workspace Toolkit repo.
+You manage the synchronization between project-level commands/skills and the GlensToolkit repo.
 
 ### Setup
 
 The toolkit repo location must be known. Check for it in this order:
 1. Environment variable: `$CLAUDE_TOOLKIT_REPO`
-2. Common locations: `~/Repos/claude-workspace-template`, `~/claude-workspace-template`, `D:/Repos/claude-workspace-template`
+2. Common locations: `~/Repos/GlensToolkit`, `~/GlensToolkit`, `D:/Repos/GlensToolkit`
 3. If not found, ask the user for the path
 
 ### Actions

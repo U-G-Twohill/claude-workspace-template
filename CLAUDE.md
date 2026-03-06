@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Is
 
-This is the **Claude Workspace Toolkit** — a two-layer system for working with Claude Code as an agent assistant across sessions and projects.
+This is **Glen's Toolkit** — a two-layer system for working with Claude Code as an agent assistant across sessions and projects.
 
 - **Toolkit layer**: Universal commands installed once at `~/.claude/commands/`, available in every project
 - **Project layer**: Per-project scaffolding (context templates, skills, directory structure) installed per repo
@@ -56,7 +56,8 @@ Claude should always orient itself through `/prime` at session start, then act w
 │   │   ├── document.md          # /document — auto-generate project documentation
 │   │   ├── connect.md           # /connect — MCP server integration setup
 │   │   ├── onboard-client.md    # /onboard-client — client onboarding packages
-│   │   └── meeting-actions.md   # /meeting-actions — meeting notes to action items
+│   │   ├── meeting-actions.md   # /meeting-actions — meeting notes to action items
+│   │   └── sync-docs.md        # /sync-docs — audit and update all documentation
 │   ├── agents/                # Custom subagents with persistent memory
 │   │   ├── code-reviewer.md       # Code review specialist (project memory)
 │   │   ├── security-auditor.md    # Security analysis specialist (user memory)
@@ -161,7 +162,7 @@ Example: `/implement plans/2026-01-28-competitor-analysis-command.md`
 
 ### /sync-toolkit [action]
 
-**Purpose:** Sync commands between this project and the Claude Workspace Toolkit repo.
+**Purpose:** Sync commands between this project and the GlensToolkit repo.
 
 Manages the feedback loop — promotes battle-tested commands from projects back to the toolkit repo, or pulls toolkit commands into a project for customization.
 
@@ -448,6 +449,19 @@ Parses meeting notes or transcripts and produces a structured output with decisi
 **Examples:**
 - `/meeting-actions ./notes/kickoff-call.md` — process meeting notes from file
 - `/meeting-actions "Client wants to launch by April. John to handle DNS. Need brand assets by next week."` — process inline notes
+
+### /sync-docs [action]
+
+**Purpose:** Audit all toolkit documentation for accuracy, update anything out of date, then optionally commit and push.
+
+Compares the actual state of commands, aliases, scripts, and workspace structure against what each documentation file claims. Fixes discrepancies and can commit/push in one step.
+
+**Actions:** `check` (audit only), `fix` (default — audit and update), `push` (audit, update, commit, and push)
+
+**Examples:**
+- `/sync-docs` — audit and fix stale docs
+- `/sync-docs check` — report what's out of date without changing anything
+- `/sync-docs push` — fix everything, commit, and push to GitHub
 
 ### Custom Subagents
 

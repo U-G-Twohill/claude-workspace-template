@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 #
-# install.sh — Scaffold a project with Claude Workspace Template (project-level files only)
+# install.sh — Scaffold a project with Glen's Toolkit (project-level files only)
 #
 # Usage:
-#   bash /path/to/claude-workspace-template/scripts/install.sh [target-path]
+#   bash /path/to/GlensToolkit/scripts/install.sh [target-path]
 #   claude-init [target-path]
 #
 # This installs project-level scaffolding (context templates, skills, CLAUDE.md).
@@ -41,7 +41,7 @@ usage() {
     cat <<'USAGE'
 Usage: install.sh [options] [target-path]
 
-Scaffold a project with Claude Workspace Template files.
+Scaffold a project with Glen's Toolkit files.
 Installs project-level files only (context templates, skills, CLAUDE.md).
 
 For universal commands (available in all projects), run:
@@ -163,7 +163,7 @@ fi
 # ── Install summary ─────────────────────────────────────────────────────────
 
 printf "\n"
-printf "${BOLD}Claude Workspace Template — Project Scaffolding${RESET}\n"
+printf "${BOLD}Glen's Toolkit — Project Scaffolding${RESET}\n"
 printf "  Source:  %s\n" "$SOURCE_DIR"
 printf "  Target:  %s\n" "$TARGET_DIR"
 printf "\n"

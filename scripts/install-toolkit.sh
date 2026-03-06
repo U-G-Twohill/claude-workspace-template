@@ -3,7 +3,7 @@
 # install-toolkit.sh — Install/update universal Claude commands to ~/.claude/
 #
 # Usage:
-#   bash /path/to/claude-workspace-template/scripts/install-toolkit.sh
+#   bash /path/to/GlensToolkit/scripts/install-toolkit.sh
 #   claude-toolkit
 #
 # Flags:
@@ -69,6 +69,7 @@ Commands installed:
   connect.md            MCP server integration setup
   onboard-client.md     Client onboarding package generation
   meeting-actions.md    Meeting notes to action items
+  sync-docs.md          Audit and update all documentation
 
 Examples:
   bash scripts/install-toolkit.sh
@@ -134,6 +135,7 @@ COMMANDS=(
     "connect.md"
     "onboard-client.md"
     "meeting-actions.md"
+    "sync-docs.md"
 )
 
 # ── Diff detection ───────────────────────────────────────────────────────────
@@ -143,7 +145,7 @@ UPDATED_COUNT=0
 UNCHANGED_COUNT=0
 
 printf "\n"
-printf "${BOLD}Claude Workspace Toolkit — Install Commands${RESET}\n"
+printf "${BOLD}Glen's Toolkit — Install Commands${RESET}\n"
 printf "  Source:  %s\n" "$SOURCE_COMMANDS"
 printf "  Target:  %s\n" "$TARGET_COMMANDS"
 printf "\n"
