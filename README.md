@@ -4,7 +4,7 @@ A command system for [Claude Code](https://docs.anthropic.com/en/docs/claude-cod
 
 **Two layers:**
 
-- **Toolkit layer**: 24 universal slash commands installed to `~/.claude/commands/`, available in every project
+- **Toolkit layer**: 28 universal slash commands installed to `~/.claude/commands/`, available in every project
 - **Project layer**: Per-project scaffolding (context templates, skills, directory structure) installed per repo
 
 Commands provide the logic; each project provides the data.
@@ -30,6 +30,7 @@ Commands provide the logic; each project provides the data.
   - [Documentation](#documentation)
   - [Client & Business](#client--business)
   - [Integration & Tooling](#integration--tooling)
+  - [Project Hub](#project-hub)
 - [Custom Subagents](#custom-subagents)
 - [Workflows & Best Practices](#workflows--best-practices)
 - [Project Structure](#project-structure)
@@ -57,7 +58,7 @@ Pick any location — the scripts will reference it by absolute path.
 
 ### Step 2: Install the Toolkit (one-time)
 
-This copies all 24 slash commands to `~/.claude/commands/` so they're available in every project:
+This copies all 28 slash commands to `~/.claude/commands/` so they're available in every project:
 
 ```bash
 bash ~/GlensToolkit/scripts/install-toolkit.sh
@@ -662,6 +663,75 @@ Audits all toolkit documentation for accuracy and updates anything out of date. 
 
 ---
 
+### Project Hub
+
+These commands connect to the [Project Hub](https://github.com/U-G-Twohill/project-hub) — a portfolio management dashboard that aggregates state across all your projects. The hub must be running at `localhost:7861`.
+
+#### `/hub-projects [query]`
+
+Query the hub for project information, health scores, and status. Auto-detects the current project from your working directory.
+
+**Query options:** `list`, `active`, `stalled`, `report`, `health`, or a project name/slug. Omit for auto-detect.
+
+```
+/hub-projects                  # Show current project details (auto-detected)
+/hub-projects active           # List all active projects
+/hub-projects health           # Health scores as a ranked table
+/hub-projects stalled          # Projects with no recent activity
+/hub-projects my-project       # Look up a specific project by slug
+```
+
+---
+
+#### `/hub-keys [query]`
+
+Look up API keys and credentials from the hub's encrypted vault. Requires the hub to be unlocked. Never displays decrypted values unless explicitly asked — defaults to showing key names, environments, and integrations.
+
+```
+/hub-keys                      # Show keys for current project (auto-detected)
+/hub-keys my-project           # Show keys for a specific project
+/hub-keys stripe               # Show all keys for an integration
+/hub-keys export my-project    # Export as ready-to-paste .env format
+```
+
+---
+
+#### `/hub-report [focus]`
+
+Generate a daily planning briefing from the hub. Shows portfolio health, projects needing attention, active work, recent completions, and AI-suggested focus areas.
+
+```
+/hub-report                    # Full daily briefing
+/hub-report focus              # Just the suggested focus section
+```
+
+**What you get:**
+- Portfolio health — active projects, total tasks, completion %
+- Needs attention — low health scores, blocked tasks, stalled projects
+- Active work — projects sorted by health score with task counts
+- Recent completions — last 7 days
+- Suggested focus — 2-3 projects to prioritise today with reasoning
+
+---
+
+#### `/hub-export [output-path]`
+
+Export the full portfolio context as `MASTER_CONTEXT.md` for upload to a Claude.ai Project. This is how you give Claude.ai situational awareness of all your projects for remote planning sessions.
+
+```
+/hub-export                    # Export to OneDrive/ClaudeSync/ (default)
+/hub-export ~/Desktop/ctx.md   # Export to a custom path
+```
+
+The export includes project summaries, health scores, task counts, tech stacks, and recent activity across all tracked projects.
+
+**When to use:**
+- Before a planning session on Claude.ai (away from desk)
+- After a batch of project updates to refresh the snapshot
+- When onboarding a new Claude.ai Project with portfolio context
+
+---
+
 ## Custom Subagents
 
 Three persistent subagents are available in every project. They learn from each use and improve over time. Claude uses them automatically when relevant, or you can invoke them directly.
@@ -724,6 +794,24 @@ cr → /autopilot
 /harden → /create-plan fixes → /implement → /harden
 ```
 
+**Daily planning (start of day):**
+
+```
+/hub-report → review suggested focus → /hub-projects {focus-project} → start work
+```
+
+**Remote planning on Claude.ai:**
+
+```
+/hub-export → upload MASTER_CONTEXT.md to Claude.ai Project → plan away from desk
+```
+
+**Check project status from any repo:**
+
+```
+/hub-projects health → /hub-projects {project-slug} → /hub-keys {project-slug}
+```
+
 ### Best Practices
 
 1. **Always start with `/prime`.** Both `cs` and `cr` do this automatically. If you start Claude manually, run `/prime` first. It takes seconds and prevents Claude from working with stale context.
@@ -752,7 +840,7 @@ After scaffolding, a project looks like this:
 .
 ├── CLAUDE.md                  # Core context — loaded by Claude every session
 ├── .claude/
-│   ├── commands/              # 24 slash commands (toolkit layer, at ~/.claude/commands/)
+│   ├── commands/              # 28 slash commands (toolkit layer, at ~/.claude/commands/)
 │   ├── agents/                # 3 custom subagents with persistent memory
 │   ├── skills/                # Domain knowledge (project layer)
 │   └── settings.local.json    # Project-level permissions

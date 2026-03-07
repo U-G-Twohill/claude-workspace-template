@@ -71,6 +71,10 @@ Commands installed:
   meeting-actions.md    Meeting notes to action items
   sync-docs.md          Audit and update all documentation
   bootstrap.md          Build prototype from business document unattended
+  hub-projects.md       Query Project Hub for project info and health
+  hub-keys.md           Look up API keys from hub vault
+  hub-report.md         Generate daily planning briefing from hub
+  hub-export.md         Export hub context as MASTER_CONTEXT.md
 
 Examples:
   bash scripts/install-toolkit.sh
@@ -138,6 +142,10 @@ COMMANDS=(
     "meeting-actions.md"
     "sync-docs.md"
     "bootstrap.md"
+    "hub-projects.md"
+    "hub-keys.md"
+    "hub-report.md"
+    "hub-export.md"
 )
 
 # ── Diff detection ───────────────────────────────────────────────────────────

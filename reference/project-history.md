@@ -154,7 +154,8 @@ GlensToolkit/                     (canonical source — where commands are autho
 ~/.claude/commands/               (universal — available in every project)
     prime.md, discover.md, scope.md, create-plan.md, implement.md,
     harden.md, create-tests.md, audit-deps.md, prepare-deploy.md,
-    proposal.md, client-report.md, competitive-intel.md, ...
+    proposal.md, client-report.md, competitive-intel.md,
+    hub-projects.md, hub-keys.md, hub-report.md, hub-export.md, ...
 
 Any Project/                      (project-specific data)
     CLAUDE.md                     (project docs — user edits this)

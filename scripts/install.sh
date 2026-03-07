@@ -265,6 +265,27 @@ printf "\n"
 
 TEMPLATES_COPIED=0
 
+copy_template() {
+    local src="$1"
+    local dst_dir="$2"
+    local name
+    name="$(basename "$src")"
+
+    if [ ! -f "$src" ]; then
+        warn "Template missing: $name (skipping)"
+        return
+    fi
+
+    if [ -f "$dst_dir/$name" ]; then
+        warn "Already exists: plans/$name (skipping — remove manually to replace)"
+        return
+    fi
+
+    cp "$src" "$dst_dir/"
+    ok "  plans/$name"
+    TEMPLATES_COPIED=$((TEMPLATES_COPIED + 1))
+}
+
 if [ "$FORCE" = true ]; then
     # In --force mode, skip Phase 2 (no interactive input available)
     info "Skipping milestone setup (--force mode)."
@@ -297,53 +318,45 @@ else
 
         # Always copy universal templates
         for f in "$SOURCE_DIR/milestone-templates/universal/"*.md; do
-            if [ -f "$f" ]; then
-                cp "$f" "$TARGET_DIR/plans/"
-                ok "  plans/$(basename "$f")"
-                TEMPLATES_COPIED=$((TEMPLATES_COPIED + 1))
-            fi
+            [ -f "$f" ] && copy_template "$f" "$TARGET_DIR/plans"
         done
 
         # Type-specific templates
         if [ "$PROJECT_TYPE" = "1" ]; then
             # Web project — always include frontend polish
-            cp "$SOURCE_DIR/milestone-templates/web-project/08-frontend-polish.md" "$TARGET_DIR/plans/"
-            ok "  plans/08-frontend-polish.md"
-            TEMPLATES_COPIED=$((TEMPLATES_COPIED + 1))
+            copy_template "$SOURCE_DIR/milestone-templates/web-project/08-frontend-polish.md" "$TARGET_DIR/plans"
 
             if [ "$HAS_DB" = "y" ] || [ "$HAS_DB" = "Y" ]; then
-                cp "$SOURCE_DIR/milestone-templates/web-project/06-database.md" "$TARGET_DIR/plans/"
-                ok "  plans/06-database.md"
-                TEMPLATES_COPIED=$((TEMPLATES_COPIED + 1))
+                copy_template "$SOURCE_DIR/milestone-templates/web-project/06-database.md" "$TARGET_DIR/plans"
             fi
 
             if [ "$HAS_AUTH" = "y" ] || [ "$HAS_AUTH" = "Y" ]; then
-                cp "$SOURCE_DIR/milestone-templates/web-project/07-auth.md" "$TARGET_DIR/plans/"
-                ok "  plans/07-auth.md"
-                TEMPLATES_COPIED=$((TEMPLATES_COPIED + 1))
+                copy_template "$SOURCE_DIR/milestone-templates/web-project/07-auth.md" "$TARGET_DIR/plans"
             fi
 
             if [ "$IS_CLIENT" = "y" ] || [ "$IS_CLIENT" = "Y" ]; then
-                cp "$SOURCE_DIR/milestone-templates/web-project/09-client-handoff.md" "$TARGET_DIR/plans/"
-                ok "  plans/09-client-handoff.md"
-                TEMPLATES_COPIED=$((TEMPLATES_COPIED + 1))
+                copy_template "$SOURCE_DIR/milestone-templates/web-project/09-client-handoff.md" "$TARGET_DIR/plans"
             fi
         elif [ "$PROJECT_TYPE" = "2" ]; then
             # Software — copy all software templates
             for f in "$SOURCE_DIR/milestone-templates/software/"*.md; do
-                if [ -f "$f" ]; then
-                    cp "$f" "$TARGET_DIR/plans/"
-                    ok "  plans/$(basename "$f")"
-                    TEMPLATES_COPIED=$((TEMPLATES_COPIED + 1))
-                fi
+                [ -f "$f" ] && copy_template "$f" "$TARGET_DIR/plans"
             done
+        else
+            # Unrecognised input — universal templates already copied, just inform the user
+            if [ "$PROJECT_TYPE" != "3" ]; then
+                warn "Unrecognised choice '$PROJECT_TYPE' — applying universal templates only."
+            fi
         fi
-        # Type 3 (experiment/personal) — universal templates only, already copied
 
         printf "\n"
-        printf "${GREEN}${BOLD}Phase 2 complete — %d milestone templates copied.${RESET}\n" "$TEMPLATES_COPIED"
-        printf "  Review and customise them in %s/plans/ before running /prime.\n" "$TARGET_DIR"
-        printf "  The Project Hub will import them automatically on next scan.\n"
+        if [ "$TEMPLATES_COPIED" -gt 0 ]; then
+            printf "${GREEN}${BOLD}Phase 2 complete — %d milestone templates copied.${RESET}\n" "$TEMPLATES_COPIED"
+            printf "  Review and customise them in %s/plans/ before running /prime.\n" "$TARGET_DIR"
+            printf "  The Project Hub will import them automatically on next scan.\n"
+        else
+            info "No new templates copied (all already exist)."
+        fi
         printf "\n"
     fi
 fi

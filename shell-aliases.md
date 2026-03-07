@@ -75,7 +75,7 @@ Resumes the last Claude Code session with permission prompts disabled. Picks up 
 alias claude-toolkit='bash "/path/to/GlensToolkit/scripts/install-toolkit.sh"'
 ```
 
-Installs or updates all 24 universal commands to `~/.claude/commands/`. These commands become available in every project.
+Installs or updates all 28 universal commands to `~/.claude/commands/`. These commands become available in every project.
 
 ```bash
 claude-toolkit              # Interactive install/update

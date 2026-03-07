@@ -20,7 +20,7 @@ Every command uses relative paths (`./context/`, `./CLAUDE.md`, `./plans/`) so i
 **Installed by:** `scripts/install-toolkit.sh`
 **Scope:** Available in every project, every session
 
-These are the 24 commands that work identically across all projects:
+These are the 28 commands that work identically across all projects:
 
 | File | Purpose |
 |------|---------|
@@ -48,6 +48,10 @@ These are the 24 commands that work identically across all projects:
 | `onboard-client.md` | Client onboarding package generation |
 | `meeting-actions.md` | Meeting notes to action items |
 | `bootstrap.md` | Build prototype from business document unattended |
+| `hub-projects.md` | Query Project Hub for project info and health scores |
+| `hub-keys.md` | Look up API keys from hub encrypted vault |
+| `hub-report.md` | Daily planning briefing from hub data |
+| `hub-export.md` | Export hub portfolio context for Claude.ai |
 
 **Update story:** Edit commands in the template repo, run `install-toolkit.sh` — all projects get the update immediately.
 
@@ -251,3 +255,4 @@ See `command-development-guide.md` for the full process. Summary:
 | 2026-03-01 | Added 16 new commands (site-audit, autopilot, frontend-design, deploy-draft, create-tests, audit-deps, prepare-deploy, proposal, client-report, competitive-intel, setup-hooks, document, connect, onboard-client, meeting-actions) and 3 custom subagents — 22 commands total. |
 | 2026-03-06 | Added `/sync-docs` command — 23 commands total. Added `crr` alias for resume-in-run-mode. |
 | 2026-03-06 | Added `/bootstrap` command — 24 commands total. Build prototypes from business documents unattended. |
+| 2026-03-06 | Added 4 hub commands (`/hub-projects`, `/hub-keys`, `/hub-report`, `/hub-export`) — 28 commands total. Added milestone templates and two-phase install.sh. |

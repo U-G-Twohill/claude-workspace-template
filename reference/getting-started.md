@@ -23,7 +23,7 @@ bash /path/to/GlensToolkit/scripts/install-toolkit.sh
 
 It will show you what's being installed and offer to add a `claude-toolkit` alias for easy re-runs.
 
-**What this installs (24 commands):**
+**What this installs (28 commands):**
 
 | Command | What It Does |
 |---------|-------------|
@@ -51,6 +51,10 @@ It will show you what's being installed and offer to add a `claude-toolkit` alia
 | `/onboard-client` | Client onboarding package generation |
 | `/meeting-actions` | Meeting notes to action items |
 | `/bootstrap` | Build prototype from business document unattended |
+| `/hub-projects` | Query Project Hub for project info and health |
+| `/hub-keys` | Look up API keys from hub vault |
+| `/hub-report` | Daily planning briefing from hub data |
+| `/hub-export` | Export hub context for Claude.ai |
 
 ### 2. Set Up Shell Aliases (Optional but Recommended)
 

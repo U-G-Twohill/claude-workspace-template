@@ -58,7 +58,11 @@ Claude should always orient itself through `/prime` at session start, then act w
 │   │   ├── onboard-client.md    # /onboard-client — client onboarding packages
 │   │   ├── meeting-actions.md   # /meeting-actions — meeting notes to action items
 │   │   ├── sync-docs.md        # /sync-docs — audit and update all documentation
-│   │   └── bootstrap.md       # /bootstrap — build prototype from business document
+│   │   ├── bootstrap.md       # /bootstrap — build prototype from business document
+│   │   ├── hub-projects.md    # /hub-projects — query Project Hub for project info
+│   │   ├── hub-keys.md        # /hub-keys — look up API keys from hub vault
+│   │   ├── hub-report.md      # /hub-report — daily planning briefing from hub
+│   │   └── hub-export.md      # /hub-export — export hub context for Claude.ai
 │   ├── agents/                # Custom subagents with persistent memory
 │   │   ├── code-reviewer.md       # Code review specialist (project memory)
 │   │   ├── security-auditor.md    # Security analysis specialist (user memory)
@@ -483,6 +487,47 @@ Compares the actual state of commands, aliases, scripts, and workspace structure
 - `/sync-docs` — audit and fix stale docs
 - `/sync-docs check` — report what's out of date without changing anything
 - `/sync-docs push` — fix everything, commit, and push to GitHub
+
+### /hub-projects [query]
+
+**Purpose:** Query the Project Hub for project information, health scores, and status.
+
+Connects to the hub API at `localhost:7861`. Auto-detects the current project from your working directory, or pass a project name/slug.
+
+**Query options:** `list`, `active`, `stalled`, `report`, `health`, or a project name/slug. Omit for auto-detect.
+
+**Examples:**
+- `/hub-projects` — show current project details
+- `/hub-projects active` — list all active projects
+- `/hub-projects health` — health scores ranked table
+
+### /hub-keys [query]
+
+**Purpose:** Look up API keys and credentials from the Project Hub vault.
+
+Requires the hub to be running and unlocked. Never displays decrypted values unless explicitly asked.
+
+**Query options:** project name/slug, integration name, or `export {slug}` for .env format. Omit for auto-detect.
+
+**Examples:**
+- `/hub-keys` — show keys for current project
+- `/hub-keys export my-project` — export as .env format
+
+### /hub-report [focus]
+
+**Purpose:** Generate a daily planning briefing from the Project Hub — portfolio health, needs attention, active work, and suggested focus.
+
+**Focus options:** omit for full briefing, `focus` for just the suggested focus section.
+
+### /hub-export [output-path]
+
+**Purpose:** Export the Project Hub portfolio context as `MASTER_CONTEXT.md` for upload to Claude.ai Projects.
+
+Runs `export-context` from the hub and saves to `OneDrive/ClaudeSync/MASTER_CONTEXT.md` plus a local copy. Use `--include-unknown` to include unclassified projects.
+
+**Examples:**
+- `/hub-export` — export to default location
+- `/hub-export ~/Desktop/context.md` — export to custom path
 
 ### Custom Subagents
 
