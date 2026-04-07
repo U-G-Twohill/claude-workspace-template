@@ -1,0 +1,12 @@
+export { liability } from './liability.js';
+export { ip } from './ip.js';
+export { confidentiality } from './confidentiality.js';
+export { termination } from './termination.js';
+export { dispute } from './dispute.js';
+export { forceMajeure } from './force-majeure.js';
+export { dataProtection } from './data-protection.js';
+export { indemnity } from './indemnity.js';
+export { warranties } from './warranties.js';
+export { payment } from './payment.js';
+export { amendments } from './amendments.js';
+export { entireAgreement } from './entire-agreement.js';

@@ -232,6 +232,37 @@ claude-toolkit      # Install/update universal commands to ~/.claude/commands/
 
 ---
 
+## Session: April 8, 2026 — Ecosystem Catch-Up & Documentation
+
+**Context:** Returned after 4-week break. Audited full project state, researched 12 Claude Code releases (v2.1.81–v2.1.94).
+
+**Changes:**
+- Added `initialPrompt` frontmatter to all 3 subagents (code-reviewer, security-auditor, client-communicator)
+- Added `paths:` scoping to site-audit and mcp-integration skills
+- Updated `/setup-hooks` for 6 new hook events and conditional `if` filtering
+- Documented `_global-brand/` and `document-templates/` systems in CLAUDE.md
+- Confirmed install.sh L1 cosmetic issue was already fixed
+
+**Ecosystem notes (Claude Code v2.1.81–v2.1.94):**
+- 6 new hook events: CwdChanged, FileChanged, PermissionDenied, InstructionsLoaded, TaskCreated, WorktreeCreate
+- Conditional `if` field for hooks (permission-rule-syntax filtering)
+- `initialPrompt` frontmatter for agents
+- `--channels` flag for phone-based approval in unattended mode
+- PowerShell tool (opt-in preview on Windows)
+- MCP `maxResultSizeChars` override (up to 500K)
+- `"defer"` permission decision for headless sessions
+- Named subagents discoverable via @ typeahead
+- Opus 4.6 output raised to 64K default / 128K ceiling
+- Claude Mythos (next frontier model) announced, in limited security preview
+
+**Outstanding:**
+- `_global-brand/` and `document-templates/` need their own integration plan (wiring into /proposal, /client-report, /document, /onboard-client)
+- Context files (personal-info, business-info, strategy, current-data) still templates
+- `--channels` + `/autopilot` integration worth testing
+- Command count: 28 (unchanged)
+
+---
+
 ## Projects Scaffolded
 
 Projects that have been set up with this toolkit (for reference):

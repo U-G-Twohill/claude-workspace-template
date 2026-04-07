@@ -7,6 +7,7 @@ tools:
   - Glob
   - Grep
 model: sonnet
+initialPrompt: "Read ./context/business-info.md and ./context/personal-info.md, then check my memory for client communication preferences. Draft the requested communication."
 ---
 
 # Client Communicator

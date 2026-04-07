@@ -89,6 +89,17 @@ Claude should always orient itself through `/prime` at session start, then act w
 │   ├── web-project/               # Web app / client site milestones (06–09)
 │   ├── software/                  # Plugin / tool / software milestones (06–08)
 │   └── _template.md               # Blank template for authoring new milestones
+├── _global-brand/             # Brand configuration (colors, fonts, logos)
+│   ├── config.json               # ICU Media Design brand settings
+│   └── placeholder/              # Logo placeholder files
+├── document-templates/        # Word document generation templates
+│   ├── _shared/                  # Generator engine, brand integration, styles
+│   ├── business/                 # Proposals, SOWs, change requests, project plans
+│   ├── handover/                 # Admin guides, deployment runbooks, training docs
+│   ├── initiation/               # Design briefs, IA docs, onboarding, tech specs
+│   ├── legal/                    # Contracts, privacy policies, ToS, DPAs
+│   ├── quality/                  # Test plans, accessibility/performance/security reports
+│   └── technical/                # API docs, architecture, DB schemas, integration runbooks
 ├── scripts/
 │   ├── install-toolkit.sh     # Install commands to ~/.claude/ (one-time)
 │   └── install.sh             # Scaffold a project (per-project, two-phase)
@@ -104,6 +115,8 @@ Claude should always orient itself through `/prime` at session start, then act w
 | `outputs/`   | Deliverables, analyses, reports, and work products.                                 |
 | `reference/` | Guides: getting-started, architecture, command development, setup.                  |
 | `milestone-templates/` | Reusable milestone roadmaps applied by `install.sh` Phase 2.               |
+| `_global-brand/` | Centralised brand configuration consumed by document templates.                |
+| `document-templates/` | Word document generation engine with 30+ templates across 6 categories. Uses `docx` npm package. |
 | `scripts/`   | Install scripts for toolkit and project scaffolding.                                |
 
 ---

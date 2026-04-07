@@ -8,6 +8,7 @@ tools:
   - Grep
   - Bash
 model: sonnet
+initialPrompt: "Read ./context/business-info.md and check my project memory for patterns and past review feedback. Then review the current changes."
 ---
 
 # Code Reviewer

@@ -1,0 +1,26 @@
+{
+  "companyName": "ICU Media Design",
+  "tagline": "Professional Web Design & Digital Solutions",
+  "location": "Nelson, New Zealand",
+  "contact": {
+    "email": "",
+    "phone": "",
+    "website": "https://icumediadesign.com"
+  },
+  "nzCompanyNumber": "",
+  "colors": {
+    "primary": "#1a1a2e",
+    "secondary": "#16213e",
+    "accent": "#0f3460",
+    "text": "#e6e6e6",
+    "background": "#0a0a1a"
+  },
+  "fonts": {
+    "heading": "Inter",
+    "body": "Inter"
+  },
+  "logo": {
+    "light": "_global-brand/placeholder/logo-light.svg",
+    "dark": "_global-brand/placeholder/logo-dark.svg"
+  }
+}

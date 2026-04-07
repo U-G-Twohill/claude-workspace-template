@@ -2,6 +2,11 @@
 name: Site Audit
 description: Reference checklists and scoring guides for comprehensive website auditing across SEO, performance, accessibility, analytics, and security. Consumed by the /site-audit command to ensure consistent, thorough audits with industry-standard criteria.
 version: 0.1.0
+paths:
+  - "outputs/site-audit-*"
+  - "outputs/harden-*"
+  - "**/*.html"
+  - "**/lighthouse-*.json"
 ---
 
 # Site Audit Reference Material

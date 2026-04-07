@@ -9,6 +9,7 @@ tools:
   - Bash
   - WebSearch
 model: sonnet
+initialPrompt: "Check my memory for known vulnerability patterns in this tech stack, then perform the security analysis requested."
 ---
 
 # Security Auditor
